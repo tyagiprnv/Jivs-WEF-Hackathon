@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- root -->
+    <xs:element name="BusinessObjectJoined" type="BusinessObjectJoined" />
+    <xs:element name="BusinessObjectSingle" type="BusinessObjectSingle" />
+
+    <xs:complexType name="BusinessObjects">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="BusinessObjectSingle" />
+            <xs:element ref="BusinessObjectJoined" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="BusinessObjectSingle">
+        <xs:complexContent>
+            <xs:extension base="BusinessObjects">
+                <xs:sequence>
+                    <xs:element name="BusinessObjectName" type="xs:string" />
+                    <xs:element name="BusinessObjectType" type="xs:string" />
+                    <xs:element name="BusinessObjectText" type="IsoTexts" />
+                    <xs:element name="BusinessObjectShortText" type="IsoTexts" />
+                    <xs:element name="BusinessObjectDescr" type="IsoTexts" />
+                    <xs:element name="BusinessObjectInMenue" type="xs:boolean" />
+                    <xs:element name="ModuleName" type="xs:string" />
+                    <xs:element name="viewReference" type="ViewReference" />
+                    <xs:element name="SqlFunctions" type="SqlFunctions" />
+                    <xs:element name="UseTheDistinctClauseInSqlSelectQuery" type="xs:boolean" />
+                    <xs:element name="TableObjects" type="TableObjects" />
+                    <xs:element name="valueFilters" type="ValueFilters" />
+                    <xs:element name="sortOptions" type="SortOptions" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="BusinessObjectJoined">
+        <xs:complexContent>
+            <xs:extension base="BusinessObjects">
+                <xs:sequence>
+                    <xs:element name="BusinessObjectName" type="xs:string" />
+                    <xs:element name="BusinessObjectType" type="xs:string" />
+                    <xs:element name="BusinessObjectText" type="IsoTexts" />
+                    <xs:element name="BusinessObjectShortText" type="IsoTexts" />
+                    <xs:element name="BusinessObjectDescr" type="IsoTexts" />
+                    <xs:element name="BusinessObjectInMenue" type="xs:boolean" />
+                    <xs:element name="ModuleName" type="xs:string" />
+                    <xs:element name="viewReference" type="ViewReference" />
+                    <xs:element name="SqlFunctions" type="SqlFunctions" />
+                    <xs:element name="UseTheDistinctClauseInSqlSelectQuery" type="xs:boolean" />
+                    <xs:element name="TableObjects" type="TableObjects" />
+                    <xs:element name="additionalJoinOptions" type="xs:anyType" />
+                    <xs:element name="staticJoinOptions" type="StaticJoinOptions" />
+                    <xs:element name="valueFilters" type="ValueFilters" />
+                    <xs:element name="sortOptions" type="SortOptions" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="IsoTexts">
+        <xs:sequence>
+            <xs:element name="IsoText" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="IsoCode" type="xs:string" />
+                        <xs:element name="Text" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ViewReference">
+        <xs:sequence>
+            <xs:element name="viewReferenceName" type="xs:string" />
+            <xs:element name="viewReferenceText" type="IsoTexts" />
+            <xs:element name="viewReferenceDescription" type="IsoTexts" />
+            <xs:element name="viewReferenceTargetUrl" type="xs:string" />
+            <xs:element name="viewReferenceTargetViewName" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SqlFunctions">
+        <xs:sequence>
+            <xs:element name="SqlFunction" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Alias" type="xs:string" />
+                        <xs:element name="SqlString" type="xs:string" />
+                        <xs:element name="DataType" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TableObjects">
+        <xs:sequence>
+            <xs:element name="TableObject" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Position" type="xs:int" nillable="false"/>
+                        <xs:element name="TableName" type="xs:string" />
+                        <xs:element name="ObjectName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="SubObjectValue" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="NumberRangeNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="ToYear" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="FromNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="ToNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="NumberStand" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="External" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="PathPhys" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="FilePhys" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="Size" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="FileLength" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StaticJoinOptions">
+        <xs:sequence>
+            <xs:element name="staticJoinOption" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="joinTable" type="xs:string" />
+                        <xs:element name="joinType" type="xs:string" />
+                        <xs:element name="joins" type="Joins" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Joins">
+        <xs:sequence>
+            <xs:element name="join" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="sourceTable" type="xs:string" />
+                        <xs:element name="sourceFieldName" type="xs:string" />
+                        <xs:element name="joinTable" type="xs:string" />
+                        <xs:element name="joinFieldName" type="xs:string" />
+                        <xs:element name="isValue" type="xs:boolean" />
+                        <xs:element name="negation" type="xs:boolean" />
+                        <xs:element name="operator" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ValueFilters">
+        <xs:sequence>
+            <xs:element name="valueFilter" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="logicalOperator" type="xs:string" />
+                        <xs:element name="tableName" type="xs:string" />
+                        <xs:element name="fieldName" type="xs:string" />
+                        <xs:element name="operator" type="xs:string" />
+                        <xs:element name="value" type="xs:string" />
+                        <xs:element name="leftParenthesis" type="xs:string" minOccurs="0" />
+                        <xs:element name="rightParenthesis" type="xs:string" minOccurs="0" />
+                        <!-- Optional fields for parentheses can be added here if needed -->
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SortOptions">
+        <xs:sequence>
+            <xs:element name="sortOption" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="sourceTable" type="xs:string" />
+                        <xs:element name="sourceField" type="xs:string" />
+                        <xs:element name="sorting" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
