@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BusinessObjectJoined xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <BusinessObjectName>FI1510</BusinessObjectName>
+    <BusinessObjectType>JOINED</BusinessObjectType>
+    <BusinessObjectText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kreditor-Lieferanten-Stamm</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base fournisseurs</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Cadastro de Fornecedores</Text>
+        </IsoText>
+    </BusinessObjectText>
+    <BusinessObjectShortText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kred.-Lief.-Stamm</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master data</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base fournisseurs</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Cadastro de Fornecedores</Text>
+        </IsoText>
+    </BusinessObjectShortText>
+    <BusinessObjectDescr>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kreditor-Lieferanten-Stamm / Keditorenverzeichnis</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master data</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base fournisseurs</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Cadastro de Fornecedores XK03</Text>
+        </IsoText>
+    </BusinessObjectDescr>
+    <BusinessObjectInMenue>true</BusinessObjectInMenue>
+    <ModuleName>FI-AP</ModuleName>
+    <viewReference>
+        <viewReferenceName>FI1510</viewReferenceName>
+        <viewReferenceText>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Kred.-Lief.-Stamm</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master data</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Base fournisseurs</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Cadastro de Fornecedores</Text>
+            </IsoText>
+        </viewReferenceText>
+        <viewReferenceDescription>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Kreditor-Lieferanten-Stamm / Keditorenverzeichnis</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master data</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Base fournisseurs</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Cadastro de Fornecedores XK03</Text>
+            </IsoText>
+        </viewReferenceDescription>
+        <viewReferenceTargetUrl>getSearchForm.do</viewReferenceTargetUrl>
+        <viewReferenceTargetViewName>viewName=FI1510</viewReferenceTargetViewName>
+    </viewReference>
+    <SqlFunctions>
+        <SqlFunction>
+            <Alias>IN_DE</Alias>
+            <SqlString>(CASE ADR6.ADDRNUMBER WHEN 'DE' THEN 'YES' ELSE 'NO' END)</SqlString>
+            <DataType>String</DataType>
+        </SqlFunction>
+    </SqlFunctions>
+    <UseTheDistinctClauseInSqlSelectQuery>true</UseTheDistinctClauseInSqlSelectQuery>
+    <TableObjects>
+        <TableObject>
+            <Position>1</Position>
+            <TableName>LFA1</TableName>
+            <ObjectName></ObjectName>
+            <SubObjectValue></SubObjectValue>
+            <NumberRangeNumber></NumberRangeNumber>
+            <ToYear></ToYear>
+            <FromNumber></FromNumber>
+            <ToNumber></ToNumber>
+            <NumberStand></NumberStand>
+            <External></External>
+            <PathPhys></PathPhys>
+            <FilePhys></FilePhys>
+            <Size></Size>
+            <FileLength></FileLength>
+        </TableObject>
+        <TableObject>
+            <Position>2</Position>
+            <TableName>LFB1</TableName>
+            <ObjectName></ObjectName>
+            <SubObjectValue></SubObjectValue>
+            <NumberRangeNumber></NumberRangeNumber>
+            <ToYear></ToYear>
+            <FromNumber></FromNumber>
+            <ToNumber></ToNumber>
+            <NumberStand></NumberStand>
+            <External></External>
+            <PathPhys></PathPhys>
+            <FilePhys></FilePhys>
+            <Size></Size>
+            <FileLength></FileLength>
+        </TableObject>
+        <TableObject>
+            <Position>3</Position>
+            <TableName>ADR6</TableName>
+            <ObjectName></ObjectName>
+            <SubObjectValue></SubObjectValue>
+            <NumberRangeNumber></NumberRangeNumber>
+            <ToYear></ToYear>
+            <FromNumber></FromNumber>
+            <ToNumber></ToNumber>
+            <NumberStand></NumberStand>
+            <External></External>
+            <PathPhys></PathPhys>
+            <FilePhys></FilePhys>
+            <Size></Size>
+            <FileLength></FileLength>
+        </TableObject>
+        <TableObject>
+            <Position>4</Position>
+            <TableName>T001</TableName>
+            <ObjectName></ObjectName>
+            <SubObjectValue></SubObjectValue>
+            <NumberRangeNumber></NumberRangeNumber>
+            <ToYear></ToYear>
+            <FromNumber></FromNumber>
+            <ToNumber></ToNumber>
+            <NumberStand></NumberStand>
+            <External></External>
+            <PathPhys></PathPhys>
+            <FilePhys></FilePhys>
+            <Size></Size>
+            <FileLength></FileLength>
+        </TableObject>
+    </TableObjects>
+    <additionalJoinOptions />
+    <staticJoinOptions>
+        <staticJoinOption>
+            <joinTable>LFB1</joinTable>
+            <joinType>left</joinType>
+            <joins>
+                <join>
+                    <sourceTable>LFA1</sourceTable>
+                    <sourceFieldName>MANDT</sourceFieldName>
+                    <joinTable>LFB1</joinTable>
+                    <joinFieldName>MANDT</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+                <join>
+                    <sourceTable>LFA1</sourceTable>
+                    <sourceFieldName>LIFNR</sourceFieldName>
+                    <joinTable>LFB1</joinTable>
+                    <joinFieldName>LIFNR</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+            </joins>
+        </staticJoinOption>
+        <staticJoinOption>
+            <joinTable>ADR6</joinTable>
+            <joinType>left</joinType>
+            <joins>
+                <join>
+                    <sourceTable>LFA1</sourceTable>
+                    <sourceFieldName>ADRNR</sourceFieldName>
+                    <joinTable>ADR6</joinTable>
+                    <joinFieldName>ADDRNUMBER</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+                <join>
+                    <sourceTable>LFA1</sourceTable>
+                    <sourceFieldName>MANDT</sourceFieldName>
+                    <joinTable>ADR6</joinTable>
+                    <joinFieldName>CLIENT</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+            </joins>
+        </staticJoinOption>
+        <staticJoinOption>
+            <joinTable>T001</joinTable>
+            <joinType>left</joinType>
+            <joins>
+                <join>
+                    <sourceTable>LFB1</sourceTable>
+                    <sourceFieldName>MANDT</sourceFieldName>
+                    <joinTable>T001</joinTable>
+                    <joinFieldName>MANDT</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+                <join>
+                    <sourceTable>LFB1</sourceTable>
+                    <sourceFieldName>BUKRS</sourceFieldName>
+                    <joinTable>T001</joinTable>
+                    <joinFieldName>BUKRS</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+            </joins>
+        </staticJoinOption>
+    </staticJoinOptions>
+    <valueFilters>
+        <valueFilter>
+            <logicalOperator>AND</logicalOperator>
+            <tableName>ADR6</tableName>
+            <fieldName>CLIENT</fieldName>
+            <operator>EQ</operator>
+            <value>800</value>
+            <leftParenthesis />
+            <rightParenthesis />
+        </valueFilter>
+    </valueFilters>
+    <sortOptions>
+        <sortOption>
+            <sourceTable>LFA1</sourceTable>
+            <sourceField>MANDT</sourceField>
+            <sorting>ASC</sorting>
+        </sortOption>
+    </sortOptions>
+</BusinessObjectJoined>
