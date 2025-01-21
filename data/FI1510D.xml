@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BusinessObjectJoined>
+    <BusinessObjectName>FI1510D</BusinessObjectName>
+    <BusinessObjectType>JOINED</BusinessObjectType>
+    <BusinessObjectText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kreditor Bankverbindungen</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (bank details)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (conexiones banco/cuenta)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base de donnees fournisseurs (coordonnees bancaires)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (coordenadas do banco)</Text>
+        </IsoText>
+    </BusinessObjectText>
+    <BusinessObjectShortText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kred. Bankverbindungen</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (bank details)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (conexiones banco/cuenta)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base de donnees fournisseurs (coordonnees bancaires)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (coordenadas do banco)</Text>
+        </IsoText>
+    </BusinessObjectShortText>
+    <BusinessObjectDescr>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kreditor-Lieferanten-Stamm (Bankverbindungen)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (bank details)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (conexiones banco/cuenta)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base de donnees fournisseurs (coordonnees bancaires)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (coordenadas do banco)</Text>
+        </IsoText>
+    </BusinessObjectDescr>
+    <BusinessObjectPosition>4</BusinessObjectPosition>
+    <BusinessObjectInMenue>false</BusinessObjectInMenue>
+    <ReleaseName>SAPECC6</ReleaseName>
+    <ModuleName>FI-AP</ModuleName>
+    <Standard>false</Standard>
+    <TestMode>false</TestMode>
+    <viewReference>
+        <viewReferenceName>FI1510D</viewReferenceName>
+        <viewReferenceText>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Kred. Bankverbindungen</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master (bank details)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores (conexiones banco/cuenta)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Base de donnees fournisseurs (coordonnees bancaires)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores (coordenadas do banco)</Text>
+            </IsoText>
+        </viewReferenceText>
+        <viewReferenceDescription>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Kreditor-Lieferanten-Stamm (Bankverbindungen)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master (bank details)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores (conexiones banco/cuenta)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Base de donnees fournisseurs (coordonnees bancaires)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores (coordenadas do banco)</Text>
+            </IsoText>
+        </viewReferenceDescription>
+        <viewReferenceTargetUrl>getSearchForm.do</viewReferenceTargetUrl>
+        <viewReferenceTargetViewName>viewName=FI1510D</viewReferenceTargetViewName>
+        <viewReferenceTargetAutoExecute>false</viewReferenceTargetAutoExecute>
+        <viewReferenceActive>true</viewReferenceActive>
+        <viewReferenceSelfReferencable>false</viewReferenceSelfReferencable>
+        <activationFieldGroups>
+            <activationFieldGroup>
+                <activationFieldGroupActive>true</activationFieldGroupActive>
+                <activationFieldGroupUseTables>true</activationFieldGroupUseTables>
+                <activationFields>
+                    <activationField>
+                        <activationFieldName>MANDT</activationFieldName>
+                        <activationTableName>LFA1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>LIFNR</activationFieldName>
+                        <activationTableName>LFA1</activationTableName>
+                    </activationField>
+                </activationFields>
+            </activationFieldGroup>
+            <activationFieldGroup>
+                <activationFieldGroupActive>true</activationFieldGroupActive>
+                <activationFieldGroupUseTables>true</activationFieldGroupUseTables>
+                <activationFields>
+                    <activationField>
+                        <activationFieldName>MANDT</activationFieldName>
+                        <activationTableName>LFB1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>LIFNR</activationFieldName>
+                        <activationTableName>LFB1</activationTableName>
+                    </activationField>
+                </activationFields>
+            </activationFieldGroup>
+        </activationFieldGroups>
+        <viewReferenceFieldMappings/>
+    </viewReference>
+    <FileDokus>
+        <FileObject>
+            <FileObjectName>FI1510D_userSettings.xml</FileObjectName>
+            <FileObjectDescr>Default personalization</FileObjectDescr>
+            <FileObjectPath>SAPECC6\FI1510D\FI1510D_userSettings.xml</FileObjectPath>
+        </FileObject>
+    </FileDokus>
+    <SqlFunctions/>
+    <VersionControlStatus>1</VersionControlStatus>
+    <BusinessObjectVersion>4</BusinessObjectVersion>
+    <Export></Export>
+    <Import></Import>
+    <Function></Function>
+    <ExportDyn></ExportDyn>
+    <Reportname>[XK03]</Reportname>
+    <ImportDyn></ImportDyn>
+    <Project></Project>
+    <SubProject></SubProject>
+    <Object></Object>
+    <Entity></Entity>
+    <TableObjects>
+        <TableObject>
+            <Position>1</Position>
+            <TableName>LFBK</TableName>
+            <ObjectName></ObjectName>
+            <SubObjectValue></SubObjectValue>
+            <NumberRangeNumber></NumberRangeNumber>
+            <ToYear></ToYear>
+            <FromNumber></FromNumber>
+            <ToNumber></ToNumber>
+            <NumberStand></NumberStand>
+            <External></External>
+            <PathPhys></PathPhys>
+            <FilePhys></FilePhys>
+            <Size></Size>
+            <FileLength></FileLength>
+        </TableObject>
+    </TableObjects>
+    <additionalJoinOptions/>
+    <staticJoinOptions/>
+    <valueFilters/>
+    <sortOptions/>
+    <blobEntries/>
+</BusinessObjectJoined>

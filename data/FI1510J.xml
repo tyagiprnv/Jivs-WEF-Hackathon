@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BusinessObjectJoined>
+    <BusinessObjectName>FI1510J</BusinessObjectName>
+    <BusinessObjectType>JOINED</BusinessObjectType>
+    <BusinessObjectText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Quellensteuertypen</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Withholding tax types</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (tipos de retencion de impuestos) X</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Fiche fournisseurs (types declaration honoraires) X</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (ctgs.de impostos retidos na fonte) X</Text>
+        </IsoText>
+    </BusinessObjectText>
+    <BusinessObjectShortText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Quellensteuertypen</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Withholding tax types</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (tipos de retencion de impuestos) X</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Fiche fournisseurs (types declaration honoraires) X</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (ctgs.de impostos retidos na fonte) X</Text>
+        </IsoText>
+    </BusinessObjectShortText>
+    <BusinessObjectDescr>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Lieferantenstamm (Quellensteuertypen) X</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (withholding tax types) X</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (tipos de retencion de impuestos) X</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Fiche fournisseurs (types declaration honoraires) X</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (ctgs.de impostos retidos na fonte) X</Text>
+        </IsoText>
+    </BusinessObjectDescr>
+    <BusinessObjectPosition>7</BusinessObjectPosition>
+    <BusinessObjectInMenue>false</BusinessObjectInMenue>
+    <ReleaseName>SAPECC6</ReleaseName>
+    <ModuleName>FI-AP</ModuleName>
+    <Standard>true</Standard>
+    <TestMode>false</TestMode>
+    <viewReference>
+        <viewReferenceName>FI1510J</viewReferenceName>
+        <viewReferenceText>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Quellensteuertypen</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores (tipos de retencion de impuestos) X</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Withholding tax types</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores (ctgs.de impostos retidos na fonte) X</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Fiche fournisseurs (types declaration honoraires) X</Text>
+            </IsoText>
+        </viewReferenceText>
+        <viewReferenceDescription>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Lieferantenstamm (Quellensteuertypen) X</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores (tipos de retencion de impuestos) X</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master (withholding tax types) X</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores (ctgs.de impostos retidos na fonte) X</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Fiche fournisseurs (types declaration honoraires) X</Text>
+            </IsoText>
+        </viewReferenceDescription>
+        <viewReferenceTargetUrl>getSearchForm.do</viewReferenceTargetUrl>
+        <viewReferenceTargetViewName>viewName=FI1510J</viewReferenceTargetViewName>
+        <viewReferenceTargetAutoExecute>false</viewReferenceTargetAutoExecute>
+        <viewReferenceActive>true</viewReferenceActive>
+        <viewReferenceSelfReferencable>false</viewReferenceSelfReferencable>
+        <activationFieldGroups>
+            <activationFieldGroup>
+                <activationFieldGroupActive>true</activationFieldGroupActive>
+                <activationFieldGroupUseTables>false</activationFieldGroupUseTables>
+                <activationFields>
+                    <activationField>
+                        <activationFieldName>mandt</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>lifnr</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>ktokk</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                </activationFields>
+            </activationFieldGroup>
+        </activationFieldGroups>
+        <viewReferenceFieldMappings/>
+    </viewReference>
+    <FileDokus>
+        <FileObject>
+            <FileObjectName>FI1510J_userSettings.xml</FileObjectName>
+            <FileObjectDescr>Default personalization</FileObjectDescr>
+            <FileObjectPath>SAPECC6\FI1510J\FI1510J_userSettings.xml</FileObjectPath>
+        </FileObject>
+    </FileDokus>
+    <SqlFunctions/>
+    <VersionControlStatus>1</VersionControlStatus>
+    <BusinessObjectVersion>3</BusinessObjectVersion>
+    <Reportname>[xk03]</Reportname>
+    <TableObjects>
+        <TableObject>
+            <Position>1</Position>
+            <TableName>LFBW</TableName>
+        </TableObject>
+    </TableObjects>
+    <valueFilters/>
+    <sortOptions/>
+    <blobEntries/>
+</BusinessObjectJoined>

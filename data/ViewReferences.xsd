@@ -1,0 +1,132 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0">
+	<xs:annotation>
+		<xs:appinfo>
+			<jxb:bindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb">
+				<jxb:globalBindings generateValueClass="false" />
+			</jxb:bindings>
+		</xs:appinfo>
+	</xs:annotation>
+
+    <xs:element name="viewReferences">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="viewReferencesDescription" type="xs:string"/>
+                <xs:element name="viewReference" type="viewReference" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="viewReference">
+        <xs:sequence>
+            <xs:element name="viewReferenceName" type="xs:string"/>
+            <xs:element name="viewReferenceText" type="IsoTexts"/><!-- jkr 20081016 geaendert von String in IsoTexts -->
+            <xs:element name="viewReferenceDescription" type="IsoTexts"/><!-- jkr 20081016 geaendert von String in IsoTexts -->
+            <xs:element name="viewReferenceTargetUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="viewReferenceTargetViewName" type="xs:string"/>
+            <xs:element name="viewReferenceTargetAutoExecute" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="viewReferenceActive" type="xs:string"/>            
+            <xs:element name="viewReferenceSelfReferencable" type="xs:string" minOccurs="0" maxOccurs="1"/><!-- jkr/mdh 20120312 neu selfreference allowed true/false -->
+            
+            <xs:element name="activationFieldGroups" type="activationFieldGroups"/>
+            
+            <xs:element name="viewReferenceFieldMappings" type="viewReferenceFieldMappings"/>
+            
+            <xs:element name="tags" type="tags" minOccurs="0" maxOccurs="1"/>
+            
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="viewReferenceFieldMappings">
+        <xs:sequence>
+            <xs:element name="viewReferenceFieldMapping" type="viewReferenceFieldMapping" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="viewReferenceFieldMapping">
+        <xs:sequence>
+        	<xs:element name="fieldName" type="xs:string"/>
+            <xs:element name="fieldNameMappings" type="fieldNameMappings"/>
+        </xs:sequence>
+    </xs:complexType>        
+ 	
+    <xs:complexType name="fieldNameMappings">
+        <xs:sequence>
+        	<xs:element name="fieldNameMapping" type="fieldNameMapping" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>  			
+				
+    <xs:complexType name="fieldNameMapping">
+        <xs:sequence>
+        	<xs:element name="fieldNameMappingFieldName" type="xs:string"/>
+        	<xs:element name="ignoreOriginalField" type="xs:string" minOccurs="0" maxOccurs="1"/>
+
+        </xs:sequence>
+    </xs:complexType>  
+    <xs:complexType name="activationFieldGroups">
+        <xs:sequence>
+	        <xs:element name="activationFieldGroup" type="activationFieldGroup" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+      
+    <xs:complexType name="activationFieldGroup"><xs:sequence>
+    	<xs:element name="activationFieldGroupActive" type="xs:string"/>
+    	<xs:element name="activationFieldGroupUseTables" type="xs:string"/>
+    	<!-- Optionally define for which source tables this activation group is meant. -->
+    	<xs:element name="activationFieldTableHint" type="xs:string"  minOccurs="0" maxOccurs="unbounded"/>
+    	<xs:element name="activationFields" type="activationFields"/>
+    </xs:sequence></xs:complexType>  
+          
+    <xs:complexType name="activationFields">
+        <xs:sequence>
+	        <xs:element name="activationField" type="activationField" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+              
+    <xs:complexType name="activationField">
+        <xs:sequence>
+            <xs:element name="activationFieldName" type="xs:string"/>
+            <xs:element name="activationTableName" type="xs:string"/>
+            <xs:element name="activationFieldCondition" type="fieldCondition" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+      
+    <xs:complexType name="fieldCondition">
+        <xs:sequence>
+            <xs:element name="conditionType" type="conditionType"/>
+            <xs:element name="conditionValue" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:simpleType name="conditionType">
+    	<xs:restriction base="xs:string">
+    		<xs:enumeration value="ANY_VALUE"/>
+    		<xs:enumeration value="IS_EMPTY"/>
+    		<xs:enumeration value="IS_NOT_EMPTY"/>
+    		<xs:enumeration value="CONTAINS"/>
+    		<xs:enumeration value="NOT_CONTAINS"/>
+    	</xs:restriction>
+    </xs:simpleType>
+    				
+    <!-- jkr 20081016 neu hinzugefuegt -->
+	<xs:complexType name="IsoTexts">
+        <xs:sequence>
+            <xs:element name="IsoText" type="IsoText" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType> 
+    
+    <!-- jkr 20081016 neu hinzugefuegt -->
+	<xs:complexType name="IsoText">
+        <xs:sequence>
+            <xs:element name="IsoCode" type="xs:string"/>
+            <xs:element name="Text" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Flags for retention, migration and filtering(called cleansing before) and other purposes -->
+	<xs:complexType name="tags">
+		<xs:sequence>
+			<xs:element name="tag" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
