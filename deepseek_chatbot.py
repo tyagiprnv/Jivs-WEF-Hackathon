@@ -1,8 +1,10 @@
 from openai import OpenAI
 import sqlparse
+import os
 
+api_key = os.getenv("DEEPSEEK_API_KEY")
 
-client = OpenAI(api_key="sk-e210302394664cf6a151c1f2429804f6", base_url="https://api.deepseek.com")
+client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 
 system_prompt_tmp = """
 You are a SQL expert. Your task is to generate valid SQL queries based on user requests. You will also validate the request against the following database schema:
