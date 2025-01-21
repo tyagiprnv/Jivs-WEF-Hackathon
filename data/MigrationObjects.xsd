@@ -1,0 +1,527 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0">
+
+    <!-- JKR copy ViewReferences.xsd 2 c temp see in bat file -->
+    <!-- items are in lower case -->
+	<xs:include schemaLocation="ViewReferences.xsd"/>
+
+	<!--  root elements -->
+	<xs:element name="SystemModule" type="SystemModule"/>
+    <xs:element name="SystemRelease" type="SystemRelease"/>
+    
+	<xs:element name="BusinessObjectSingle" type="BusinessObjectSingle"/>
+    <xs:element name="BusinessObjectJoined" type="BusinessObjectJoined"/>       
+    <xs:element name="BusinessObjectFiles" type="BusinessObjectFiles"/>      
+    <xs:element name="BusinessObjectReport" type="BusinessObjectReport"/>
+
+    <xs:element name="MigrationObjects">
+        <xs:complexType>
+            <xs:sequence>
+            	<xs:element name="MigrationObjectsName" type="xs:string"/>
+				<xs:element name="MigrationObjectsText" type="xs:string"/>
+				<xs:element name="MigrationObjectsDescr" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="MigrationObjectsVersion" type="xs:string" minOccurs="0" maxOccurs="1"/><!-- jkr 20081016 neu versionierung-->
+				<xs:element name="MigrationObjectsDate" type="xs:string" minOccurs="0" maxOccurs="1"/><!-- jkr 20081016 neu datum der erstellung-->
+                <xs:element name="SystemReleases" type="SystemReleases" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="SystemReleases">
+        <xs:sequence>
+            <xs:element ref="SystemRelease" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="SystemRelease">
+        <xs:sequence>
+            <xs:element name="ReleaseName" type="xs:string"/>
+            <xs:element name="ReleaseType" type="xs:string"/>
+            <xs:element name="ReleaseText" type="xs:string"/>
+            <xs:element name="ReleaseDescr" type="xs:string" minOccurs="0" maxOccurs="1"/>    
+            <xs:element name="SystemModules" type="SystemModules" minOccurs="0" maxOccurs="1"/>
+            
+            <!--Start Neu JKR 20090424 Jivs.Administrator kann somit vorhergehende XML Datei einlesen ohne extra Converter-->                
+            <xs:element name="createdBy" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="createdOn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="changeHistory" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <!--End Neu JKR 20090424-->            
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="SystemModules">
+        <xs:sequence>
+            <xs:element ref="SystemModule" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SystemModule">
+        <xs:sequence>
+            <xs:element name="SystemModuleName" type="xs:string"/>
+            <xs:element name="SystemModuleType" type="xs:string"/>
+            <xs:element name="SystemModuleText" type="xs:string"/>
+            <xs:element name="SystemModuleDescr" type="xs:string" minOccurs="0" maxOccurs="1"/>           
+            <xs:element name="ReleaseName" type="xs:string"/>
+            <xs:element name="BusinessObjects" type="BusinessObjects" minOccurs="0" maxOccurs="1"/>
+            
+            <!--Start Neu JKR 20090424 Jivs.Administrator kann somit vorhergehende XML Datei einlesen ohne extra Converter-->                
+            <xs:element name="createdBy" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="createdOn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="changeHistory" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <!--End Neu JKR 20090424-->             
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BusinessObjects">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="BusinessObjectSingle" />
+            <xs:element ref="BusinessObjectJoined" />       
+            <xs:element ref="BusinessObjectFiles" />      
+            <xs:element ref="BusinessObjectReport"/>
+        </xs:choice>
+    </xs:complexType> 
+    
+    <xs:complexType name="BusinessObject">
+        <xs:sequence>
+            <xs:element name="BusinessObjectName" type="xs:string"/>
+            <xs:element name="BusinessObjectType" type="xs:string"/>
+            <xs:element name="BusinessObjectText" type="IsoTexts"/><!-- jkr 20081016 geaendert von String in IsoTexts -->
+            <xs:element name="BusinessObjectShortText" type="IsoTexts" minOccurs="0" maxOccurs="1"/><!-- jkr 20120806 neu short text fuer viewreferences -->
+            <xs:element name="BusinessObjectDescr" type="IsoTexts" minOccurs="0" maxOccurs="1"/><!-- jkr 20081016 geaendert von String in IsoTexts -->     
+            <xs:element name="BusinessObjectPosition" type="xs:int" nillable="false" maxOccurs="1"/>  
+            <xs:element name="BusinessObjectInMenue" type="xs:boolean" nillable="false"/>                       
+            <xs:element name="ReleaseName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ModuleName" type="xs:string" minOccurs="0" maxOccurs="1"/>  <!-- JKR 20100416 NEW fuer neue versionen mit bosserver darum optional -->
+            <xs:element name="Standard" type="xs:boolean" nillable="false"/><!-- jkr 20081016 neu hinzugefuegt -->
+            <xs:element name="TestMode" type="xs:boolean" nillable="false" maxOccurs="1"/><!-- jkr 20081016 neu hinzugefuegt -->
+            <xs:element name="viewReference" type="viewReference" minOccurs="0" maxOccurs="1"/> 
+            <xs:element name="FileDokus" type="FileObjects" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="SqlFunctions" type="SqlFunctions" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="SqlGroups" type="SqlGroups" minOccurs="0" maxOccurs="1"/>    
+            <xs:element name="UseTheDistinctClauseInSqlSelectQuery" type="xs:string" minOccurs="0" maxOccurs="1"/><!-- STT 20140206 neu hinzugefügt -->
+            <xs:element name="DistinctConfigurationChangeable" type="xs:string" minOccurs="0" maxOccurs="1"/><!-- STT 20140226 neu hinzugefügt -->
+            <xs:element name="AddSearchFormValuesToJoinClause" type="xs:string" minOccurs="0" maxOccurs="1"/><!-- STT 20140226 neu hinzugefügt -->
+            
+            <!--Start Neu JKR 20090424 Jivs.Administrator kann somit vorhergehende XML Datei einlesen ohne extra Converter-->                
+            <xs:element name="createdBy" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="createdOn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="changeHistory" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <!--End Neu JKR 20090424-->    
+            
+			<!--Start Neu JKR+PLR 20100831 Integration mir BOS-Server -->                
+            <xs:element name="VersionControlStatus" type="xs:int" nillable="false" maxOccurs="1"/>
+            <xs:element name="BusinessObjectVersion" type="xs:int" nillable="false" maxOccurs="1"/>
+            <!--End Neu JKR 20100831-->  
+            
+<!--        Angabe original Programmname / Report / Funktion -->
+            <xs:element name="Export" type="xs:string" minOccurs="0" maxOccurs="1"/>          
+            <xs:element name="Import" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Function" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ExportDyn" type="xs:string" minOccurs="0" maxOccurs="1"/>            
+            <xs:element name="Reportname" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ImportDyn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Project" type="xs:string" minOccurs="0" maxOccurs="1"/>            
+            <xs:element name="SubProject" type="xs:string" minOccurs="0" maxOccurs="1"/>
+	        <xs:element name="Object" type="xs:string" minOccurs="0" maxOccurs="1"/>
+           	<xs:element name="Entity" type="xs:string" minOccurs="0" maxOccurs="1"/>
+           	
+           	<!-- Report details -->
+           	<xs:element name="UsedTables" type="xs:string" minOccurs="0" maxOccurs="1"/>
+           	
+           	<!-- Search tags -->
+           	<xs:element name="Tag" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>  
+    
+    <xs:complexType name="BusinessObjectSingle">
+        <xs:complexContent>
+	        <xs:extension base="BusinessObject">
+		        <xs:sequence>			               
+		            <xs:element name="TableObject" type="TableObject"/>
+		            <xs:element name="valueFilters" type="valueFilters" minOccurs="0" maxOccurs="1"/> <!-- JKR 20100416 NEW  -->
+		            <xs:element name="sortOptions" type="sortOptions" minOccurs="0" maxOccurs="1"/>   
+		            <xs:element name="blobEntries" type="blobEntries" minOccurs="0" maxOccurs="1"/> <!-- JKR 20110421 NEW  -->	                
+		            <xs:element name="fieldConfigurations" type="fieldConfigurations" minOccurs="0" maxOccurs="1" /><!-- KJL 20120614 NEW -->     
+					<xs:element name="fieldTranslations" type="fieldTranslations" minOccurs="0" maxOccurs="1" /><!-- JKR 20140410 NEW -->         
+			    </xs:sequence>
+			</xs:extension>
+	    </xs:complexContent>
+    </xs:complexType> 
+    
+    <xs:complexType name="BusinessObjectJoined">
+        <xs:complexContent>
+	        <xs:extension base="BusinessObject">
+		        <xs:sequence>			              
+	            	<xs:element name="TableObjects" type="TableObjects" minOccurs="0" maxOccurs="1"/>
+	            	<xs:element name="additionalJoinOptions" type="additionalJoinOptions" minOccurs="0" maxOccurs="1"/> 
+					<xs:element name="staticJoinOptions" type="staticJoinOptions" minOccurs="0" maxOccurs="1"/><!--  STT 20140303 neu hinzugefügt -->	            	
+	            	<xs:element name="valueFilters" type="valueFilters" minOccurs="0" maxOccurs="1"/> <!-- JKR 20100416 NEW  -->
+	            	<xs:element name="sortOptions" type="sortOptions" minOccurs="0" maxOccurs="1"/>
+	            	<xs:element name="blobEntries" type="blobEntries" minOccurs="0" maxOccurs="1"/> <!-- JKR 20110421 NEW  -->
+	            	<xs:element name="fieldConfigurations" type="fieldConfigurations" minOccurs="0" maxOccurs="1" /><!-- KJL 20120614 NEW -->	
+	            	<xs:element name="fieldTranslations" type="fieldTranslations" minOccurs="0" maxOccurs="1" /><!-- JKR 20140410 NEW -->  
+	            	<xs:element name="unitFullReferences" type="unitFullReferences" minOccurs="0" maxOccurs="1" />        	
+			    </xs:sequence>
+			</xs:extension>
+	    </xs:complexContent>
+    </xs:complexType>  
+
+    <xs:complexType name="BusinessObjectFiles">
+        <xs:complexContent>
+	        <xs:extension base="BusinessObject">
+		        <xs:sequence>			               
+		            <xs:element name="FileObjects" type="FileObjects"/>   	                
+			    </xs:sequence>
+			</xs:extension>
+	    </xs:complexContent>
+    </xs:complexType> 
+
+    
+    <xs:complexType name="BusinessObjectReport">
+        <xs:complexContent>
+	        <xs:extension base="BusinessObject">
+		        <xs:sequence>			               
+		            <xs:element name="ReportObjects" type="ReportObjects"/>
+		            <xs:element name="fieldTranslations" type="fieldTranslations" minOccurs="0" maxOccurs="1" />
+			    </xs:sequence>
+			</xs:extension>
+	    </xs:complexContent>
+    </xs:complexType> 
+    
+    
+    <xs:complexType name="TableObjects">
+        <xs:sequence>
+            <xs:element name="TableObject" type="TableObject" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType> 
+    
+    <xs:complexType name="TableObject">
+        <xs:sequence>
+            <xs:element name="Position" type="xs:int" nillable="false"/>
+            <xs:element name="TableName" type="xs:string"/>
+            <xs:element name="ObjectName" type="xs:string" minOccurs="0" maxOccurs="1"/>          
+            <xs:element name="SubObjectValue" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="NumberRangeNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ToYear" type="xs:string" minOccurs="0" maxOccurs="1"/>           
+            <xs:element name="FromNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ToNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="NumberStand" type="xs:string" minOccurs="0" maxOccurs="1"/>            
+            <xs:element name="External" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="PathPhys" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="FilePhys" type="xs:string" minOccurs="0" maxOccurs="1"/>          
+            <xs:element name="Size" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="FileLength" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="TableAlias" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="retention" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="filtering" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="migration" type="xs:string" minOccurs="0" maxOccurs="1"/>             
+        </xs:sequence>
+    </xs:complexType> 
+    
+	<xs:complexType name="additionalJoinOptions">
+		<xs:sequence>
+			<xs:element name="additionalJoinOption" type="additionalJoinOption" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+    </xs:complexType>
+
+	<xs:complexType name="additionalJoinOption">
+		<xs:sequence>
+			<xs:element name="sourceTable" type="xs:string"/>
+			<xs:element name="sourceField" type="xs:string"/>
+			<xs:element name="joinOptions" type="joinOptions"/>
+		</xs:sequence>
+	</xs:complexType>
+	    
+    <xs:complexType name="joinOptions">
+		<xs:sequence>
+			<xs:element name="joinOption" type="joinOption" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="joinOption">
+            <xs:sequence>
+            <xs:element name="fieldNameJoin" type="xs:string"/>
+            <xs:element name="tableNameJoin" type="xs:string"/>
+            <xs:element name="typeNameJoin">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="inner"/>
+                        <xs:enumeration value="left"/>
+                        <xs:enumeration value="right"/>
+                        <xs:enumeration value="cross"/>
+                    </xs:restriction>
+                </xs:simpleType>
+	   		</xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+	<!-- Neue Join Options STT 20140228 -->
+	<xs:complexType name="staticJoinOptions">
+		<xs:sequence>
+			<xs:element name="staticJoinOption" type="staticJoinOption"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="staticJoinOption">
+		<xs:sequence>
+			<xs:element name="joinTable" type="xs:string" />
+			<xs:element name="joinType">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="inner" />
+						<xs:enumeration value="left" />
+						<xs:enumeration value="right" />
+						<xs:enumeration value="cross" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="joins" type="joins" />
+			<xs:element name="alias" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="joins">
+		<xs:sequence>
+			<xs:element name="join" type="join" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="join">
+		<xs:sequence>
+			<xs:element name="sourceTable" type="xs:string" />
+			<xs:element name="sourceFieldName" type="xs:string" />
+			<xs:element name="joinTable" type="xs:string" />			
+			<xs:element name="joinFieldName" type="xs:string" />
+			<xs:element name="isValue">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="true" />
+						<xs:enumeration value="false" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="negation">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="true" />
+						<xs:enumeration value="false" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="operator" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType> 
+    
+    <!-- START JKR 20100416 NEW  -->
+    <xs:complexType name="valueFilters">
+        <xs:sequence>
+            <xs:element name="valueFilter" type="valueFilter" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>  
+    
+     <xs:complexType name="valueFilter">
+        <xs:sequence>
+            <xs:element name="logicalOperator" type="xs:string"/>
+            <xs:element name="tableName" type="xs:string"/>
+            <xs:element name="fieldName" type="xs:string"/>
+            <xs:element name="operator" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+			<xs:element name="leftParenthesis" type="xs:string" minOccurs="0"/>
+			<xs:element name="rightParenthesis" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType> 
+    <!-- END JKR 20100416 NEW  -->   
+    
+    <xs:complexType name="FileObjects">
+        <xs:sequence>
+            <xs:element name="FileObject" type="FileObject" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType> 
+    
+	<xs:complexType name="FileObject">
+        <xs:sequence>
+            <xs:element name="FileObjectName" type="xs:string"/>
+            <xs:element name="FileObjectDescr" type="xs:string"/>          
+            <xs:element name="FileObjectPath" type="xs:string"/>      
+        </xs:sequence>
+    </xs:complexType>
+
+	<xs:complexType name="SqlFunctions">
+		<xs:sequence>
+			<xs:element name="SqlFunction" type="SqlFunction"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SqlFunction">
+		<xs:sequence>
+			<xs:element name="Alias" type="xs:string" />
+			<xs:element name="SqlString" type="xs:string" />
+			<xs:element name="DataType" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SqlGroups">
+		<xs:sequence>
+			<xs:element name="SqlGroup" type="SqlGroup"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SqlGroup">
+		<xs:sequence>
+			<xs:element name="Table" type="xs:string" />
+			<xs:element name="Field" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>   
+    
+<!-- Reports   -->
+    <xs:complexType name="ReportObjects">
+        <xs:sequence>
+            <xs:element name="ReportObject" type="ReportObject" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="menu">
+             <xs:simpleType>
+                <xs:restriction base="xs:string">
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute> 
+    </xs:complexType> 
+           
+    <xs:complexType name="ReportObject">
+        <xs:sequence>
+            <xs:element name="ReportObjectName" type="xs:string"/>
+            <xs:element name="ReportObjectDescr" type="xs:string"/>          
+            <xs:element name="ReportObjectPath" type="xs:string"/>
+            <xs:element name="TableObjects" type="TableObjects" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>   
+    
+    
+    
+    
+	<!--Start Neu JKR 20090424-->
+	<xs:complexType name="sortOptions">
+		<xs:sequence>
+			<xs:element name="sortOption" type="sortOption" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+    </xs:complexType>
+
+	<xs:complexType name="sortOption">
+		<xs:sequence>
+			<xs:element name="sourceTable" type="xs:string"/>
+			<xs:element name="sourceField" type="xs:string"/>
+			<xs:element name="sorting" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>	
+	
+	<xs:complexType name="changeHistory">
+		<xs:sequence>
+			<xs:element name="change" type="change" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+    </xs:complexType>	
+	
+	<xs:complexType name="change">
+		<xs:sequence>
+        	<xs:element name="changedBy" type="xs:string"/>
+            <xs:element name="changedOn" type="xs:string"/>
+            <xs:element name="changingReason" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>	
+	<!--end Neu JKR 20090424-->
+	
+    <!-- START JKR 20110421 NEW  -->
+    <xs:complexType name="blobEntries">
+        <xs:sequence>
+            <xs:element name="blobEntry" type="blobEntry" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>  
+    
+     <xs:complexType name="blobEntry">
+        <xs:sequence>
+            <xs:element name="content" type="targetFieldInfo"/> <!-- The blob field in the DB  -->
+            <xs:element name="mimeType" type="targetFieldInfo" minOccurs="0" maxOccurs="1"/> <!-- in this field u find the mime type  -->
+            <xs:element name="fileName" type="targetFieldInfo" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="fileExtension" type="targetFieldInfo" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="fileRelativePath" type="targetFieldInfo" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>When present, defines relative path for blobs content (e.g. to indicate target directory for export)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType> 
+    
+     <xs:complexType name="targetFieldInfo">
+        <xs:sequence>
+            <xs:element name="tableName" type="xs:string"/>
+            <xs:element name="fieldName" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>     
+    <!-- END JKR 20110421 NEW  -->  	
+    
+    <!-- START KJL 20120614 MT997 -->
+    <xs:complexType name="fieldConfigurations">
+        <xs:sequence>
+            <xs:element name="fieldConfiguration" type="FieldConfiguration" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>  
+     
+    <xs:complexType name="FieldConfiguration">
+        <xs:sequence>
+            <xs:element name="tableName" type="xs:string"/>
+            <xs:element name="columnName" type="xs:string"/>
+            <xs:element name="searchFieldActive" type="xs:boolean" nillable="false"/>
+            <xs:element name="displayFieldActive" type="xs:boolean" nillable="false"/>
+            <xs:element name="required" type="xs:boolean" nillable="false"/>
+        </xs:sequence>
+    </xs:complexType>    
+    <!-- END KJL 20120614 NEW -->  	
+
+	<!-- START JKR 20140410 NEW -->  
+    <xs:complexType name="fieldTranslations">
+        <xs:sequence>
+            <xs:element name="fieldTranslation" type="fieldTranslation" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType> 
+    
+    <xs:complexType name="fieldTranslation">
+        <xs:sequence>
+        	<xs:element name="language" type="xs:string"/>
+            <xs:element name="tableName" type="xs:string"/>
+            <xs:element name="fieldName" type="xs:string"/>
+            <xs:element name="searchFieldText" type="xs:string"/>
+            <xs:element name="displayFieldText" type="xs:string"/>
+            <xs:element name="descriptionText" type="xs:string"/>                       
+        </xs:sequence>
+    </xs:complexType>      
+    <!-- END JKR 20140410 NEW -->  
+    
+    <xs:complexType name="unitFullReferences">
+        <xs:sequence>
+            <xs:element name="unitFullReference" type="unitFullReference" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType> 
+    
+    <xs:complexType name="unitFullReference">
+        <xs:sequence>
+        	<xs:element name="tableName" type="xs:string"/>
+            <xs:element name="fieldName" type="xs:string"/>
+            <xs:element name="refTableName" type="xs:string"/>
+            <xs:element name="refFieldName" type="xs:string"/>
+            <xs:element name="dataType" type="xs:string"/>
+            <!-- 
+			<xs:element name="datatype">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="quan" />
+						<xs:enumeration value="curr" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			 -->
+            <!-- <xs:element name="included" type="xs:boolean" nillable="false"/> -->                 
+        </xs:sequence>
+    </xs:complexType>  
+</xs:schema>

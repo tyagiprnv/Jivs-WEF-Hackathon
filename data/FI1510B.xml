@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BusinessObjectJoined>
+    <BusinessObjectName>FI1510B</BusinessObjectName>
+    <BusinessObjectType>JOINED</BusinessObjectType>
+    <BusinessObjectText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kreditor EG-Steuernummern</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (VAT registration numbers general section)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (parte general de NIF de CE)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Fiche fournisseur (partie generale no d'ident. fiscale UE)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (parte geral do no ID fiscal UE)</Text>
+        </IsoText>
+    </BusinessObjectText>
+    <BusinessObjectShortText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kred. EG-Steuernummern</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (VAT registration numbers general section)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (parte general de NIF de CE)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Fiche fournisseur (partie generale no d'ident. fiscale UE)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (parte geral do no ID fiscal UE)</Text>
+        </IsoText>
+    </BusinessObjectShortText>
+    <BusinessObjectDescr>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kreditor-Lieferanten-Samm (allgemeiner Teil EG-Steuernummern)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (VAT registration numbers general section)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (parte general de NIF de CE)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Fiche fournisseur (partie generale no d'ident. fiscale UE)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (parte geral do no ID fiscal UE)</Text>
+        </IsoText>
+    </BusinessObjectDescr>
+    <BusinessObjectPosition>2</BusinessObjectPosition>
+    <BusinessObjectInMenue>false</BusinessObjectInMenue>
+    <ReleaseName>SAPECC6</ReleaseName>
+    <ModuleName>FI-AP</ModuleName>
+    <Standard>true</Standard>
+    <TestMode>false</TestMode>
+    <viewReference>
+        <viewReferenceName>FI1510B</viewReferenceName>
+        <viewReferenceText>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Kred. EG-Steuernummern</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores (parte general de NIF de CE)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master (VAT registration numbers general section)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Fiche fournisseur (partie generale no d'ident. fiscale UE)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores (parte geral do no ID fiscal UE)</Text>
+            </IsoText>
+        </viewReferenceText>
+        <viewReferenceDescription>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Kreditor-Lieferanten-Samm (allgemeiner Teil EG-Steuernummern)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores (parte general de NIF de CE)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master (VAT registration numbers general section)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Fiche fournisseur (partie generale no d'ident. fiscale UE)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores (parte geral do no ID fiscal UE)</Text>
+            </IsoText>
+        </viewReferenceDescription>
+        <viewReferenceTargetUrl>getSearchForm.do</viewReferenceTargetUrl>
+        <viewReferenceTargetViewName>viewName=FI1510B</viewReferenceTargetViewName>
+        <viewReferenceTargetAutoExecute>false</viewReferenceTargetAutoExecute>
+        <viewReferenceActive>true</viewReferenceActive>
+        <viewReferenceSelfReferencable>false</viewReferenceSelfReferencable>
+        <activationFieldGroups>
+            <activationFieldGroup>
+                <activationFieldGroupActive>true</activationFieldGroupActive>
+                <activationFieldGroupUseTables>false</activationFieldGroupUseTables>
+                <activationFields>
+                    <activationField>
+                        <activationFieldName>mandt</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>lifnr</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>ktokk</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                </activationFields>
+            </activationFieldGroup>
+        </activationFieldGroups>
+        <viewReferenceFieldMappings/>
+    </viewReference>
+    <FileDokus>
+        <FileObject>
+            <FileObjectName>FI1510B_userSettings.xml</FileObjectName>
+            <FileObjectDescr>Default personalization</FileObjectDescr>
+            <FileObjectPath>SAPECC6\FI1510B\FI1510B_userSettings.xml</FileObjectPath>
+        </FileObject>
+    </FileDokus>
+    <SqlFunctions/>
+    <VersionControlStatus>1</VersionControlStatus>
+    <BusinessObjectVersion>3</BusinessObjectVersion>
+    <Reportname>[XK03]</Reportname>
+    <TableObjects>
+        <TableObject>
+            <Position>1</Position>
+            <TableName>LFAS</TableName>
+        </TableObject>
+    </TableObjects>
+    <valueFilters/>
+    <sortOptions/>
+    <blobEntries/>
+</BusinessObjectJoined>
