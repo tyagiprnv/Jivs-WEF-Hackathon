@@ -1,0 +1,11 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "LFBK",
+            "Position": "1"
+        }
+    ],
+    "StaticJoinOptions": [],
+    "ValueFilters": [],
+    "SortOptions": []
+}

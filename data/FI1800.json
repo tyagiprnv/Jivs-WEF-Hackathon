@@ -1,0 +1,182 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "LFA1",
+            "Position": "1"
+        },
+        {
+            "TableName": "LFB1",
+            "Position": "2"
+        },
+        {
+            "TableName": "BSEG",
+            "Position": "3"
+        },
+        {
+            "TableName": "BKPF",
+            "Position": "4"
+        },
+        {
+            "TableName": "T001",
+            "Position": "5"
+        },
+        {
+            "TableName": "T014",
+            "Position": "6"
+        }
+    ],
+    "StaticJoinOptions": [
+        {
+            "JoinTable": "LFB1",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "LFA1",
+                    "SourceField": "MANDT",
+                    "JoinTable": "LFB1",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFA1",
+                    "SourceField": "LIFNR",
+                    "JoinTable": "LFB1",
+                    "JoinField": "LIFNR",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "BSEG",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "LFB1",
+                    "SourceField": "MANDT",
+                    "JoinTable": "BSEG",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFB1",
+                    "SourceField": "BUKRS",
+                    "JoinTable": "BSEG",
+                    "JoinField": "BUKRS",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFB1",
+                    "SourceField": "LIFNR",
+                    "JoinTable": "BSEG",
+                    "JoinField": "LIFNR",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "BKPF",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "BSEG",
+                    "SourceField": "MANDT",
+                    "JoinTable": "BKPF",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSEG",
+                    "SourceField": "BUKRS",
+                    "JoinTable": "BKPF",
+                    "JoinField": "BUKRS",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSEG",
+                    "SourceField": "BELNR",
+                    "JoinTable": "BKPF",
+                    "JoinField": "BELNR",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSEG",
+                    "SourceField": "GJAHR",
+                    "JoinTable": "BKPF",
+                    "JoinField": "GJAHR",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "T001",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "BSEG",
+                    "SourceField": "MANDT",
+                    "JoinTable": "T001",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSEG",
+                    "SourceField": "BUKRS",
+                    "JoinTable": "T001",
+                    "JoinField": "BUKRS",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "T014",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "BSEG",
+                    "SourceField": "MANDT",
+                    "JoinTable": "T014",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSEG",
+                    "SourceField": "KKBER",
+                    "JoinTable": "T014",
+                    "JoinField": "KKBER",
+                    "Operator": "equal"
+                }
+            ]
+        }
+    ],
+    "ValueFilters": [
+        {
+            "LogicalOperator": "AND",
+            "TableName": "BSEG",
+            "FieldName": "KOART",
+            "Operator": "=",
+            "Value": "'K'"
+        }
+    ],
+    "SortOptions": [
+        {
+            "SourceTable": "LFA1",
+            "SourceField": "LIFNR",
+            "Sorting": "ASC"
+        },
+        {
+            "SourceTable": "LFB1",
+            "SourceField": "BUKRS",
+            "Sorting": "ASC"
+        },
+        {
+            "SourceTable": "BSEG",
+            "SourceField": "GJAHR",
+            "Sorting": "ASC"
+        },
+        {
+            "SourceTable": "BKPF",
+            "SourceField": "BUDAT",
+            "Sorting": "ASC"
+        }
+    ]
+}

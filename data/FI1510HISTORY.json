@@ -1,0 +1,69 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "CDHDR",
+            "Position": "1"
+        },
+        {
+            "TableName": "CDPOS",
+            "Position": "2"
+        }
+    ],
+    "StaticJoinOptions": [
+        {
+            "JoinTable": "CDPOS",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "CDHDR",
+                    "SourceField": "MANDANT",
+                    "JoinTable": "CDPOS",
+                    "JoinField": "MANDANT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "CDHDR",
+                    "SourceField": "OBJECTCLAS",
+                    "JoinTable": "CDPOS",
+                    "JoinField": "OBJECTCLAS",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "CDHDR",
+                    "SourceField": "OBJECTID",
+                    "JoinTable": "CDPOS",
+                    "JoinField": "OBJECTID",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "CDHDR",
+                    "SourceField": "CHANGENR",
+                    "JoinTable": "CDPOS",
+                    "JoinField": "CHANGENR",
+                    "Operator": "equal"
+                }
+            ]
+        }
+    ],
+    "ValueFilters": [
+        {
+            "LogicalOperator": "AND",
+            "TableName": "CDHDR",
+            "FieldName": "OBJECTCLAS",
+            "Operator": "=",
+            "Value": "'KRED'"
+        }
+    ],
+    "SortOptions": [
+        {
+            "SourceTable": "CDHDR",
+            "SourceField": "UDATE",
+            "Sorting": "DESC"
+        },
+        {
+            "SourceTable": "CDHDR",
+            "SourceField": "UTIME",
+            "Sorting": "DESC"
+        }
+    ]
+}
