@@ -1,0 +1,129 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "BSIK",
+            "Position": "1"
+        },
+        {
+            "TableName": "LFA1",
+            "Position": "2"
+        },
+        {
+            "TableName": "LFB1",
+            "Position": "3"
+        },
+        {
+            "TableName": "BKPF",
+            "Position": "4"
+        },
+        {
+            "TableName": "T001",
+            "Position": "5"
+        }
+    ],
+    "StaticJoinOptions": [
+        {
+            "JoinTable": "LFA1",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "MANDT",
+                    "JoinTable": "LFA1",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "LIFNR",
+                    "JoinTable": "LFA1",
+                    "JoinField": "LIFNR",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "LFB1",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "MANDT",
+                    "JoinTable": "LFB1",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "BUKRS",
+                    "JoinTable": "LFB1",
+                    "JoinField": "BUKRS",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "LIFNR",
+                    "JoinTable": "LFB1",
+                    "JoinField": "LIFNR",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "BKPF",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "MANDT",
+                    "JoinTable": "BKPF",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "BUKRS",
+                    "JoinTable": "BKPF",
+                    "JoinField": "BUKRS",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "BELNR",
+                    "JoinTable": "BKPF",
+                    "JoinField": "BELNR",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "GJAHR",
+                    "JoinTable": "BKPF",
+                    "JoinField": "GJAHR",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "T001",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "MANDT",
+                    "JoinTable": "T001",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "BSIK",
+                    "SourceField": "BUKRS",
+                    "JoinTable": "T001",
+                    "JoinField": "BUKRS",
+                    "Operator": "equal"
+                }
+            ]
+        }
+    ],
+    "ValueFilters": [],
+    "SortOptions": []
+}

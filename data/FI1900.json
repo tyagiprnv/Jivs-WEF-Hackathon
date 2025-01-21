@@ -1,0 +1,91 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "LFA1",
+            "Position": "1"
+        },
+        {
+            "TableName": "LFB1",
+            "Position": "2"
+        },
+        {
+            "TableName": "LFC1",
+            "Position": "3"
+        },
+        {
+            "TableName": "T001",
+            "Position": "4"
+        }
+    ],
+    "StaticJoinOptions": [
+        {
+            "JoinTable": "LFB1",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "LFA1",
+                    "SourceField": "MANDT",
+                    "JoinTable": "LFB1",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFA1",
+                    "SourceField": "LIFNR",
+                    "JoinTable": "LFB1",
+                    "JoinField": "LIFNR",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "LFC1",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "LFB1",
+                    "SourceField": "MANDT",
+                    "JoinTable": "LFC1",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFB1",
+                    "SourceField": "LIFNR",
+                    "JoinTable": "LFC1",
+                    "JoinField": "LIFNR",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFB1",
+                    "SourceField": "BUKRS",
+                    "JoinTable": "LFC1",
+                    "JoinField": "BUKRS",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "T001",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "T001",
+                    "SourceField": "MANDT",
+                    "JoinTable": "LFB1",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "T001",
+                    "SourceField": "BUKRS",
+                    "JoinTable": "LFB1",
+                    "JoinField": "BUKRS",
+                    "Operator": "equal"
+                }
+            ]
+        }
+    ],
+    "ValueFilters": [],
+    "SortOptions": []
+}

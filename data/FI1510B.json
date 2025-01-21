@@ -1,0 +1,11 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "LFAS",
+            "Position": "1"
+        }
+    ],
+    "StaticJoinOptions": [],
+    "ValueFilters": [],
+    "SortOptions": []
+}
