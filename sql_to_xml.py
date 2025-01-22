@@ -12,7 +12,7 @@ import xml.dom.minidom as minidom
 import json
 
 mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions'}
-api_key = ''
+api_key = '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'
 client = OpenAI(api_key=api_key)
 
 def ask_gpt(sys_msg):
@@ -39,7 +39,7 @@ def is_well_formed(xml_text):
         ET.fromstring(xml_text)
         return True
     except ET.ParseError as e:
-        # print(f"Regenerating Bad xml")
+        print(f"Regenerating Bad xml \n" + xml_text)
         return False
     
 def get_selects(vals):
@@ -120,7 +120,7 @@ def generate_child_xmls(sql):
     flag = True
     resp = None
     while flag:
-        resp = get_selects(parsed_dict['expressions'])
+        resp = get_selects(parsed_dict['expressions']).replace("```","").replace("xml","")
         if is_well_formed(resp):
             flag = False
             components['select'] = resp
@@ -132,7 +132,7 @@ def generate_child_xmls(sql):
     flag = True
     resp = None
     while flag:
-        resp = get_TableObjects(all_tables_involved)
+        resp = get_TableObjects(all_tables_involved).replace("```","").replace("xml","")
         if is_well_formed(resp):
             flag = False
             components['all_tables'] = resp 
@@ -143,7 +143,7 @@ def generate_child_xmls(sql):
         if 'joins' not in parsed_dict.keys():
             flag = False
             continue
-        resp = get_joins(parsed_dict['joins'])
+        resp = get_joins(parsed_dict['joins']).replace("```","").replace("xml","")
         if is_well_formed(resp):
             flag = False
             components['staticJoinOption'] = resp
@@ -154,7 +154,7 @@ def generate_child_xmls(sql):
         if 'where' not in parsed_dict.keys():
             flag = False
             continue
-        resp = get_where(parsed_dict['where'])
+        resp = get_where(parsed_dict['where']).replace("```","").replace("xml","")
         if is_well_formed(resp):
             flag = False
             components['where'] = resp
@@ -165,7 +165,7 @@ def generate_child_xmls(sql):
         if 'order' not in parsed_dict.keys():
             flag = False
             continue
-        resp = get_order(parsed_dict['order'])
+        resp = get_order(parsed_dict['order']).replace("```","").replace("xml","")
         if is_well_formed(resp):
             flag = False
             components['order'] = resp
@@ -270,8 +270,8 @@ def create_final_xml(sql, schema_dict, child_xml):
     
     return root
 
-sql_filepath = "data/sample_2.sql"
-xsd_file = "data/standard.xsd"
+sql_filepath = "data/sample.sql"
+xsd_file = "config/standard.xsd"
 schema_dict = XMLSchema.meta_schema.decode(xsd_file)
 components_schema = {}
 for i, sch in enumerate(schema_dict['xs:complexType']):
@@ -283,5 +283,5 @@ child_xml_dict = generate_child_xmls(sql)
 rt = create_final_xml(sql, schema_dict, child_xml_dict)
 tree = ET.ElementTree(rt)
 viewName, viewDesc = get_view_details() 
-output_xml_file = f"data/{viewName}.xml"
+output_xml_file = f"config/{viewName}.xml"
 tree.write(output_xml_file, encoding="utf-8", xml_declaration=True)

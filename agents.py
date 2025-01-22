@@ -369,7 +369,7 @@ class SQLtoXML:
         flag = True
         resp = None
         while flag:
-            resp = self.get_selects(parsed_dict['expressions'])
+            resp = self.get_selects(parsed_dict['expressions']).replace("```","").replace("xml","")
             if self.is_well_formed(resp):
                 flag = False
                 components['select'] = resp
@@ -381,7 +381,7 @@ class SQLtoXML:
         flag = True
         resp = None
         while flag:
-            resp = self.get_TableObjects(all_tables_involved)
+            resp = self.get_TableObjects(all_tables_involved).replace("```","").replace("xml","")
             if self.is_well_formed(resp):
                 flag = False
                 components['all_tables'] = resp 
@@ -392,7 +392,7 @@ class SQLtoXML:
             if 'joins' not in parsed_dict.keys():
                 flag = False
                 continue
-            resp = get_joins(parsed_dict['joins'])
+            resp = get_joins(parsed_dict['joins']).replace("```","").replace("xml","")
             if is_well_formed(resp):
                 flag = False
                 components['staticJoinOption'] = resp
@@ -403,7 +403,7 @@ class SQLtoXML:
             if 'where' not in parsed_dict.keys():
                 flag = False
                 continue
-            resp = get_joins(parsed_dict['where'])
+            resp = get_joins(parsed_dict['where']).replace("```","").replace("xml","")
             if is_well_formed(resp):
                 flag = False
                 components['where'] = resp
@@ -414,7 +414,7 @@ class SQLtoXML:
             if 'order' not in parsed_dict.keys():
                 flag = False
                 continue
-            resp = get_joins(parsed_dict['order'])
+            resp = get_joins(parsed_dict['order']).replace("```","").replace("xml","")
             if is_well_formed(resp):
                 flag = False
                 components['order'] = resp
