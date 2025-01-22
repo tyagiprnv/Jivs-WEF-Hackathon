@@ -1,6 +1,6 @@
 import random
 import re
-import sqlparse
+import sqlglot
 
 def ai_greetings():
     greetings = ["Hello", "Hi there", "Greetings", "Good Day", "Nice to meet you"]
@@ -93,13 +93,7 @@ def is_url(text):
 
 def is_sql_statement(sql_text):
   try:
-    statements = sqlparse.parse(sql_text)
-    if not statements:
-      return False
-    for statement in statements:
-      stmt_type = statement.get_type()
-      if stmt_type == 'UNKNOWN':
-        return False
+    parsed = sqlglot.parse_one(sql_text)
     return True
   except Exception:
     return False

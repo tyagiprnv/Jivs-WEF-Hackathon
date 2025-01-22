@@ -1,9 +1,13 @@
 from sentence_transformers import SentenceTransformer
 import chromadb
+from xmlschema import XMLSchema
+import sqlglot
+import xml.etree.ElementTree as ET
 from typing import List, Dict
 import os
 import ast
 import re
+import json
 
 #MAIN AGENT
 class TaskDetectingAgent:
@@ -230,7 +234,7 @@ class SQLXMLGenAgent:
                     - Ensure the query is as concise as possible and accurately reflects the user's requirements.
                     - Only respond with the query and do not provide any extra information.
                 7. Final Response Format:
-                    - If you have enough information: Return only one SQL query.
+                    - If you have enough information: Return only one SQL query as a text. No other information.
                     - If you do not have enough information: Return a clarifying question or list of questions to the user, asking them to specify the missing details.
             Only return one SQL query as text or the question you want to ask. Do not provide any additional explantion or information''' 
             }]
@@ -247,79 +251,283 @@ class SQLXMLGenAgent:
         self.sql_gen_messages.append({"role": "assistant", "content": response.choices[0].message.content})
         # print(self.sql_gen_messages)
         return response.choices[0].message.content
-        
-        
-# Agent 1
-def llm_guardrail(user_query):
-    # client = OpenAI(api_key="API_KEY")
-    system_prompt = f""" You are an assistant for the company Data Migration Internation who is an expert in 
-    data management, application retirement, and migration. You should be able to expertly classify a given query 
-    as RELEVANT to the Data Migration Internation company or not solely on the user query.
+
+class SQLtoXML:
     
-    Response: Classify the query as RELEVANT or NOTRELEVANT
-    """
-    return system_prompt
-
-
-# Agent 1
-def task_classifier():
-    system_prompt = f""" 
-    You are an intelligent AI assistant who classifies tasks and returns the function to be selected as a function call.
-    You classify the user prompt into either of the two sepcific task:
-    - IMP view : Provide a link to the view on a database requested by the user. This task just works on fetching the link and nothing else. This will return the link_generator function.
-    - Business Object Creation : Generate the SQL query requested by the user. This will return the function sql_generator.
-    Make sure you follow these steps:
-    1. Plan first : Decide which one of the two task is needed to be performed.
-    2. Specify only one function that needs to be called based on the task.
-    3. Do not run the function, just return it as a tool_call.
-    """
-    return system_prompt
-
-
-# Agent 2
-# def sql_generator(prompt, messages):
-#     messages = [msg for msg in st.sess]
-
-#     sql_user_prompt(prompt)
-#     return response
-
-def sql_system_prompt():
-    with open("data/schema.txt", 'r') as infile:
-        schema = infile.read()
-
-    system_message = f'''You are a SQL expert. Your task is to generate valid SQL queries based on user requests. You do not respond to anything else. You just generate valid executable SQL queries.
-    Given an input question, create a syntactically correct SQL query. Do not provide any explanation.
-    Database Schema: {schema}
-    Follow these steps:
-    1. Check for Table Name:
-        - Identify if the user has specified a table name.
-        - If the user has not given a table name, or if the provided table name is not in the known schema, ask the user to choose a table name from the valid table list.
-    2. Check for Required Columns and Conditions:
-        - Identify the columns or attributes the user wants to select, filter on, group by, or order by.
-        - If the user hasn't specified which columns to select, then select all columns by default.
-        - If the user hasn't specified conditions clearly (e.g., they say “get me the info” without specifying which fields), ask the user to clarify.
-        - If the user mentions columns that don't exist in the selected table, ask them to confirm or correct the column names by giving them the list of columns.
-    3. Check the join conditions (if any):
-        - If the join type is not mentioned, ask the user to clarify which type of join they need.
-        - If the columns to join are not mentioned (e.g. they say "merge tables A and B"), then using the schema of the tables, strictly respond with the name of the columns on which these tables can be joined.
-    4. Check for Missing or Ambiguous Details: 
-        - Does the user want any filtering (e.g., a WHERE clause)? If yes, but they haven't provided the filter details (e.g., “get data from table X after a certain date” without specifying the date), prompt them to clarify.
-        - Do they mention any aggregation or grouping (e.g., “sum of sales”)? If so, ensure that group-by columns and aggregate functions are specified. If not, ask for clarification.
-        - Do they mention any ordering or limiting requirements (e.g., “sort by price,” or “top 10 results”)? If so, verify you have all the details (column name for ordering, the limit number, etc.). If unclear, ask for more information.
-    5. Ask Clarifying Questions if Needed:
-        - If any crucial piece of information is missing or ambiguous (table name, columns, filters, groupings, etc.), ask only for that missing or ambiguous information.
-        - Do not proceed to generate a SQL query if you do not have enough information.
-    6. Generate the SQL Query:
-        - Once you have confirmed the table name is valid and all required details are present, generate the SQL query in the correct SQL syntax.
-        - Ensure the query is as concise as possible and accurately reflects the user's requirements.
-        - Only respond with the query and do not provide any extra information.
-    7. Final Response Format:
-        - If you have enough information: Return only one SQL query.
-        - If you do not have enough information: Return a clarifying question or list of questions to the user, asking them to specify the missing details.
+    def __init__(self, client):
+    
+        self.llm = client
+        self.mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions'}
+        self.schema_dict = XMLSchema.meta_schema.decode("config/standard.xsd")
+        self.components_schema = {}
+        for i, sch in enumerate(self.schema_dict['xs:complexType']):
+            self.components_schema[sch['@name']] = self.schema_dict['xs:complexType'][i]
+    
+    def ask_gpt(self, msg):
+        completion = self.llm.chat.completions.create(
+            model="gpt-4o", 
+            messages=[{"role": "user", "content": msg}])
         
-    Only return one SQL query as text or the question you want to ask. Do not provide any additional explantion or information'''
+        result = completion.choices[0].message.content.split(",")
+        
+        return result[0]
+        
+    def get_sql(self, filepath):
+        try:
+            with open(filepath, 'r', encoding='utf-8') as file:
+                return file.read()
+        except FileNotFoundError:
+            return "The file could not be found."
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+    
+    def is_well_formed(self, xml_text):
+        try:
+            ET.fromstring(xml_text)
+            return True
+        except ET.ParseError as e:
+            # print(f"Regenerating Bad xml")
+            return False
+    
+    def get_selects(self, vals):
+        
+        if vals is None:
+            return 'NA'
+        select_xsd = self.components_schema[self.mapping_sql_xmlschema['select']]
+        msg = f'''For a given SQL SELECT clause and xsd definition as json
+        {select_xsd}
+        write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
+    
+        {vals}
+        '''
+        resp = self.ask_gpt(msg)
+        return resp
 
-    return system_message
+    def get_distincts(self, vals):
+        if vals is None:
+            return False
+        return True
+
+    def get_TableObjects(self, vals):
+        if vals is None:
+            return False
+        TableObjects_xsd = self.components_schema[self.mapping_sql_xmlschema['all_tables']]
+        msg = f'''For a given table names: {vals.split(' ')}.
+        And xsd definition as json
+        {TableObjects_xsd}
+        write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
+        '''
+        resp = self.ask_gpt(msg)
+        return resp
+
+    def get_joins(self, vals):
+        
+        if vals is None:
+            return False
+        staticJoin_xsd = self.components_schema[self.mapping_sql_xmlschema['all_joins']]
+        individual_xsd = self.components_schema[self.mapping_sql_xmlschema['individual_joins']]
+        msg = f'''For a given SQL JOIN clauses and xsd definition as json
+        {staticJoin_xsd} and {individual_xsd}
+        write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
+    
+        {vals}
+        '''
+        resp = self.ask_gpt(msg)
+        return resp
+
+    def get_where(self, vals):
+        if vals is None:
+            return False
+        where_xsd = self.components_schema[self.mapping_sql_xmlschema['where']]
+        msg = f'''For a given SQL WHERE clause and xsd definition as json
+        {where_xsd}
+        write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
+    
+        {vals}
+        '''
+        resp = self.ask_gpt(msg)
+        return resp
+
+    def get_order(self, vals):
+        if vals is None:
+            return False
+        order_xsd = self.components_schema[self.mapping_sql_xmlschema['order']]
+        msg = f'''For a given SQL WHERE clause and xsd definition as json
+        {order_xsd}
+        write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
+    
+        {vals}
+        '''
+        resp = self.ask_gpt(msg)
+        return resp
+        
+    def generate_child_xmls(self, sql):
+        parsed = sqlglot.parse_one(sql)
+        parsed_dict = parsed.args
+        components = {}
+        
+        flag = True
+        resp = None
+        while flag:
+            resp = self.get_selects(parsed_dict['expressions'])
+            if self.is_well_formed(resp):
+                flag = False
+        components['select'] = resp
+        
+        components['distinct'] = False if parsed_dict['distinct'] is None else True
+        
+        qsn = f"List all tables used in this sql :{sql}. Return only table names separated by single whitespace in that same order mentioned. Do not provide any explanations."
+        all_tables_involved = self.ask_gpt(qsn)
+        flag = True
+        resp = None
+        while flag:
+            resp = self.get_TableObjects(all_tables_involved)
+            if self.is_well_formed(resp):
+                flag = False
+        components['all_tables'] = resp 
+        
+        flag = True
+        resp = None
+        while flag:
+            if "joins" in parsed_dict.keys():
+                resp = self.get_joins(parsed_dict['joins'])
+                if self.is_well_formed(resp):
+                    flag = False
+            else:
+                resp = "NA"
+                flag = False
+                    
+        components['staticJoinOption'] = resp
+        
+        flag = True
+        resp = None
+        while flag:
+            if "where" in parsed_dict.keys():
+                resp = self.get_where(parsed_dict['where'])
+                if self.is_well_formed(resp):
+                    flag = False
+            else:
+                resp = "NA"
+                flag = False
+        components['where'] = resp
+        
+        flag = True
+        resp = None
+        while flag:
+            if "order" in parsed_dict.keys():
+                resp = self.get_order(parsed_dict['order'])
+                if self.is_well_formed(resp):
+                    flag = False
+            else:
+                resp = "NA"
+                flag = False
+        components['order'] = resp
+        
+        return components
+    
+    def get_view_details(self):
+        with open("config/view.json", 'r') as json_file:
+            data = json.load(json_file)
+            return data['viewName'], data['viewDesc']
+    
+    def create_final_xml(self, sql, child_xml):
+        ns = self.schema_dict['@xmlns:xs']
+        ET.register_namespace("@xmlns:xs", ns)
+        if 'join' not in sql.lower():
+            root = ET.Element("BusinessObjectSingle")
+        root = ET.Element("BusinessObjectJoined")
+        
+        # Get view detail from user input saved in view.json
+        viewName, viewDesc = self.get_view_details()
+        # Add elements now
+        BusinessObjectName = viewName
+        BusinessObjectType = 'JOINED' if 'join' in sql.lower() else 'SINGLE'
+        BusinessObjectDescription = viewDesc
+        iso_lang = ['de', 'en', 'es', 'fr', 'pt']
+        IsoText = {}
+        IsoText['en'] = BusinessObjectDescription
+        for i in iso_lang:
+            msg = f"Translate this text into {i} language as it is without extra explanation. Provide only the translation and not other description or explanation.\n{BusinessObjectDescription}"
+            IsoText[i] = self.ask_gpt(msg)
+            
+        BusinessObjectInMenue = 'true'
+        ModuleName = 'FI-AP'
+        viewReferenceName = BusinessObjectName
+        viewReferenceTargetUrl = f"https://wef2025.cloud.jivs.com/jivs/getSearchForm.do?viewName={BusinessObjectName}&packageName=sap.ecc60kjl"
+        viewReferenceTargetViewName = f'viewName={BusinessObjectName}'
+        UseTheDistinctClauseInSqlSelectQuery = str(child_xml['distinct']).lower()
+        
+        # Create the Tree now
+        ET.SubElement(root, "BusinessObjectName").text = BusinessObjectName
+        ET.SubElement(root, "BusinessObjectType").text = BusinessObjectType
+        bot = ET.SubElement(root, "BusinessObjectText")
+        for i in iso_lang:
+            isotext = ET.SubElement(bot, "IsoText")
+            ET.SubElement(isotext, "IsoCode").text = i
+            ET.SubElement(isotext, "Text").text = IsoText[i]
+            
+        bost = ET.SubElement(root, "BusinessObjectShortText")
+        for i in iso_lang:
+            isotext = ET.SubElement(bost, "IsoText")
+            ET.SubElement(isotext, "IsoCode").text = i
+            ET.SubElement(isotext, "Text").text = IsoText[i]
+            
+        bodesc = ET.SubElement(root, "BusinessObjectDescr")
+        for i in iso_lang:
+            isotext = ET.SubElement(bodesc, "IsoText")
+            ET.SubElement(isotext, "IsoCode").text = i
+            ET.SubElement(isotext, "Text").text = IsoText[i]
+            
+        ET.SubElement(root, "BusinessObjectInMenue").text = BusinessObjectInMenue
+        ET.SubElement(root, "ModuleName").text = ModuleName
+        
+        vr = ET.SubElement(root, "viewReference")
+        ET.SubElement(vr, "viewReferenceName").text = viewReferenceName
+        vrt = ET.SubElement(vr, "viewReferenceText")
+        for i in iso_lang:
+            isotext = ET.SubElement(vrt, "IsoText")
+            ET.SubElement(isotext, "IsoCode").text = i
+            ET.SubElement(isotext, "Text").text = IsoText[i]
+        vrd = ET.SubElement(vr, "viewReferenceDescription")
+        for i in iso_lang:
+            isotext = ET.SubElement(vrd, "IsoText")
+            ET.SubElement(isotext, "IsoCode").text = i
+            ET.SubElement(isotext, "Text").text = IsoText[i]
+        ET.SubElement(vr, "viewReferenceTargetUrl").text = viewReferenceTargetUrl
+        ET.SubElement(vr, "viewReferenceTargetViewName").text = viewReferenceTargetViewName
+        
+        sqlFunction = ET.fromstring(child_xml['select'].replace('\n', '').strip())
+        root.append(sqlFunction)
+        
+        ET.SubElement(root, "UseTheDistinctClauseInSqlSelectQuery").text = UseTheDistinctClauseInSqlSelectQuery
+        
+        TableObjects = ET.fromstring(child_xml['all_tables'].replace('\n', '').strip())
+        root.append(TableObjects)
+        
+        staticJoinOptions = ET.fromstring(child_xml['staticJoinOption'].replace('\n', '').strip())
+        root.append(staticJoinOptions)
+        
+        valueFilters = ET.fromstring(child_xml['where'].replace('\n', '').strip())
+        root.append(valueFilters)
+        
+        sortOptions = ET.fromstring(child_xml['order'].replace('\n', '').strip())
+        root.append(sortOptions)
+        
+        return root
+    
+    def convert_sql_to_xml(self):
+        
+        viewName, _ = self.get_view_details()
+        sql = self.get_sql(f"config/{viewName}.sql")
+        child_xml_dict = self.generate_child_xmls(sql)
+
+        rt = self.create_final_xml(sql, child_xml_dict)
+        tree = ET.ElementTree(rt) 
+        
+        output_xml_file = f"config/{viewName}.xml"
+        tree.write(output_xml_file, encoding="utf-8", xml_declaration=True)
+    
+    
 
 # def generate_sql(user_input, api_key):
 #     client = OpenAI(api_key= api_key)
