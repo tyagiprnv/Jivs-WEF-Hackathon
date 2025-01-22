@@ -30,7 +30,7 @@ def get_sql(filepath):
         return f"An error occurred: {str(e)}"
     
 def get_view_details():
-    with open("output/view.json", 'r') as json_file:
+    with open("config/view.json", 'r') as json_file:
         data = json.load(json_file)
         return data['viewName'], data['viewDesc']
 
@@ -195,7 +195,7 @@ def create_final_xml(sql, schema_dict, child_xml):
     BusinessObjectInMenue = 'true'
     ModuleName = 'FI-AP'
     viewReferenceName = BusinessObjectName
-    viewReferenceTargetUrl = f'http://jivs.com/{BusinessObjectName}.ch'
+    viewReferenceTargetUrl = f"https://wef2025.cloud.jivs.com/jivs/getSearchForm.do?viewName={BusinessObjectName}&packageName=sap.ecc60kjl"
     viewReferenceTargetViewName = f'viewName={BusinessObjectName}'
     UseTheDistinctClauseInSqlSelectQuery = str(child_xml['distinct']).lower()
     
@@ -269,5 +269,6 @@ sql = get_sql(sql_filepath)
 child_xml_dict = generate_child_xmls(sql)
 rt = create_final_xml(sql, schema_dict, child_xml_dict)
 tree = ET.ElementTree(rt)
-output_xml_file = "output/processed.xml"
+viewName, viewDesc = get_view_details() 
+output_xml_file = f"data/{viewName}.xml"
 tree.write(output_xml_file, encoding="utf-8", xml_declaration=True)
