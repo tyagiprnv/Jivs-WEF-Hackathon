@@ -1,4 +1,6 @@
 import random
+import re
+import sqlparse
 
 def ai_greetings():
     greetings = ["Hello", "Hi there", "Greetings", "Good Day", "Nice to meet you"]
@@ -66,3 +68,38 @@ def check_for_tool(client, user_query, tools, model = "gpt-4o-mini"):
     )
 
     return check_for_tool.choices[0]
+
+def is_url(text):
+    """
+    Check if the provided text is a valid URL using regular expressions.
+
+    Args:
+        text (str): The text to validate as a URL.
+
+    Returns:
+        bool: True if text is a valid URL, False otherwise.
+    """
+    # Define a regex pattern for validating URLs
+    url_pattern = re.compile(
+        r'^(https?|ftp)://'  # http://, https://, or ftp://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+'  # Domain name
+        r'[A-Z]{2,6}\.?|'  # Top-level domain
+        r'localhost|'  # localhost
+        r'\d{1,3}(?:\.\d{1,3}){3})'  # ...or IPv4 address
+        r'(?::\d+)?'  # Optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+
+    return re.match(url_pattern, text)
+
+def is_sql_statement(sql_text):
+  try:
+    statements = sqlparse.parse(sql_text)
+    if not statements:
+      return False
+    for statement in statements:
+      stmt_type = statement.get_type()
+      if stmt_type == 'UNKNOWN':
+        return False
+    return True
+  except Exception:
+    return False
