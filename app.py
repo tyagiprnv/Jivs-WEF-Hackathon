@@ -45,6 +45,31 @@ def initialize_env_variables():
 
 initialize_env_variables()
 
+st.set_page_config(
+    initial_sidebar_state = "expanded",
+    page_title = "AppName",
+    layout = "wide"
+)
+
+with st.sidebar:
+    st.title("AppName")
+    # st.image("")
+    
+    # st.subheader("Select which LLM you want to use:")
+    options = ["GPT-4o-Mini", "LLaMa 3.2B (Still in Development)"]
+    selected_model_name = st.sidebar.selectbox(
+        "Select which LLM to use",
+        options,
+        key = "selected_model"
+    )
+    mapping = {
+        "GPT-4o-Mini":"gpt-4o-mini",
+        "LLaMa 3.2B (Still in Development)": "llama3"
+    }
+    selected_model = mapping.get(selected_model_name)
+    if selected_model == "llama3":
+        selected_model = "gpt-4o-mini"
+        
 def new_chat():
     
     st.session_state.task_detector_agent = TaskDetectingAgent(st.session_state.client)
@@ -154,6 +179,7 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                     st.session_state.messages.append(tool_response)
                     
                     if is_url(response):
+                        print("Link Generated")
                         st.session_state.tool_counter = 0
                     
             elif function_name == "sql_generator":
