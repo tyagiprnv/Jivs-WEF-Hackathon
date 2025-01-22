@@ -16,14 +16,16 @@ Rules:
 1. If the user request is unclear or cannot be translated into a valid SQL query, ask clarifying questions.
 2. Only generate SQL queries if the request makes sense for the database schema.
 3. Format the SQL query properly.
+4. Once a valid SQL query is generated, explain the query in simple terms to a non-technical user.
 
 Examples:
 - User: "Retrieve all data from the table LFB5."
   SQL: SELECT * FROM LFB5;
+  Explanation: This query retrieves all the information stored in the LFB5 table.
 
 - User: "Show all contact persons for vendors in ascending order of their IDs."
   SQL: SELECT KNVK.*, ADR6.* FROM KNVK LEFT JOIN ADR6 ON KNVK.MANDT = ADR6.CLIENT AND KNVK.PRSNR = ADR6.PERSNUMBER WHERE KNVK.LIFNR <> '' ORDER BY KNVK.MANDT ASC, KNVK.LIFNR ASC;
-
+  Explanation: This query retrieves all contact persons for vendors, including their details, and orders the results by their IDs in ascending order.
 """
 
 with open("data/schema.txt", 'r') as infile:
@@ -37,13 +39,12 @@ def generate_sql(user_input):
     message = {"role": "user", "content": user_input}
     conversation.append(message)
     response = client.chat.completions.create(
-    model="deepseek-chat",
-    messages=conversation,
-    stream=False
+        model="deepseek-chat",
+        messages=conversation,
+        stream=False
     )
     conversation.append(response.choices[0].message)
     return response.choices[0].message.content
-
 
 def validate_sql(sql_query):
     try:
@@ -66,6 +67,8 @@ def interact_with_user():
             sql_query = response.replace("SQL:", "").strip()
             if validate_sql(sql_query):
                 print("Generated SQL Query:", sql_query)
+                explanation = response.split("Explanation:")[1].strip()
+                print("Explanation:", explanation)
                 break
             else:
                 print("Generated SQL Query is invalid.")
@@ -76,4 +79,3 @@ def interact_with_user():
 
 if __name__ == "__main__":
     interact_with_user()
-
