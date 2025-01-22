@@ -8,7 +8,7 @@ from openai import OpenAI
 import xml.dom.minidom as minidom
 
 mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions'}
-api_key = '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'
+api_key = ''
 client = OpenAI(api_key=api_key)
 
 def ask_gpt(sys_msg):
