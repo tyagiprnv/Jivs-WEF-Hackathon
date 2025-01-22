@@ -131,69 +131,20 @@
         <TableObject>
             <Position>1</Position>
             <TableName>LFA1</TableName>
-            <ObjectName></ObjectName>
-            <SubObjectValue></SubObjectValue>
-            <NumberRangeNumber></NumberRangeNumber>
-            <ToYear></ToYear>
-            <FromNumber></FromNumber>
-            <ToNumber></ToNumber>
-            <NumberStand></NumberStand>
-            <External></External>
-            <PathPhys></PathPhys>
-            <FilePhys></FilePhys>
-            <Size></Size>
-            <FileLength></FileLength>
         </TableObject>
         <TableObject>
             <Position>2</Position>
             <TableName>LFB1</TableName>
-            <ObjectName></ObjectName>
-            <SubObjectValue></SubObjectValue>
-            <NumberRangeNumber></NumberRangeNumber>
-            <ToYear></ToYear>
-            <FromNumber></FromNumber>
-            <ToNumber></ToNumber>
-            <NumberStand></NumberStand>
-            <External></External>
-            <PathPhys></PathPhys>
-            <FilePhys></FilePhys>
-            <Size></Size>
-            <FileLength></FileLength>
         </TableObject>
         <TableObject>
             <Position>3</Position>
             <TableName>ADR6</TableName>
-            <ObjectName></ObjectName>
-            <SubObjectValue></SubObjectValue>
-            <NumberRangeNumber></NumberRangeNumber>
-            <ToYear></ToYear>
-            <FromNumber></FromNumber>
-            <ToNumber></ToNumber>
-            <NumberStand></NumberStand>
-            <External></External>
-            <PathPhys></PathPhys>
-            <FilePhys></FilePhys>
-            <Size></Size>
-            <FileLength></FileLength>
         </TableObject>
         <TableObject>
             <Position>4</Position>
             <TableName>T001</TableName>
-            <ObjectName></ObjectName>
-            <SubObjectValue></SubObjectValue>
-            <NumberRangeNumber></NumberRangeNumber>
-            <ToYear></ToYear>
-            <FromNumber></FromNumber>
-            <ToNumber></ToNumber>
-            <NumberStand></NumberStand>
-            <External></External>
-            <PathPhys></PathPhys>
-            <FilePhys></FilePhys>
-            <Size></Size>
-            <FileLength></FileLength>
         </TableObject>
     </TableObjects>
-    <additionalJoinOptions />
     <staticJoinOptions>
         <staticJoinOption>
             <joinTable>LFB1</joinTable>
@@ -275,8 +226,8 @@
             <fieldName>CLIENT</fieldName>
             <operator>EQ</operator>
             <value>800</value>
-            <leftParenthesis />
-            <rightParenthesis />
+            <leftParenthesis></leftParenthesis>
+            <rightParenthesis></rightParenthesis>
         </valueFilter>
     </valueFilters>
     <sortOptions>
