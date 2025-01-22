@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BusinessObjectJoined>
+    <BusinessObjectName>FI1510H</BusinessObjectName>
+    <BusinessObjectType>JOINED</BusinessObjectType>
+    <BusinessObjectText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Organisationsdaten</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master record purchasing organization data</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores: datos de la organizacion de compras</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Enreg-maitre fournisseur donnees organisation des achats</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores: dados de organizacao de compras</Text>
+        </IsoText>
+    </BusinessObjectText>
+    <BusinessObjectShortText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Organisationsdaten</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master record purchasing organization data</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores: datos de la organizacion de compras</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Enreg-maitre fournisseur donnees organisation des achats</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores: dados de organizacao de compras</Text>
+        </IsoText>
+    </BusinessObjectShortText>
+    <BusinessObjectDescr>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Einkaufsorganisationsdaten</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master record purchasing organization data</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores: datos de la organizacion de compras</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Enreg-maitre fournisseur donnees organisation des achats</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores: dados de organizacao de compras</Text>
+        </IsoText>
+    </BusinessObjectDescr>
+    <BusinessObjectPosition>5</BusinessObjectPosition>
+    <BusinessObjectInMenue>false</BusinessObjectInMenue>
+    <ReleaseName>SAPECC6</ReleaseName>
+    <ModuleName>FI-AP</ModuleName>
+    <Standard>true</Standard>
+    <TestMode>false</TestMode>
+    <viewReference>
+        <viewReferenceName>FI1510H</viewReferenceName>
+        <viewReferenceText>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Organisationsdaten</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master record purchasing organization data</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores: datos de la organizacion de compras</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Enreg-maitre fournisseur donnees organisation des achats</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores: dados de organizacao de compras</Text>
+            </IsoText>
+        </viewReferenceText>
+        <viewReferenceDescription>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Einkaufsorganisationsdaten</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master record purchasing organization data</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores: datos de la organizacion de compras</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Enreg-maitre fournisseur donnees organisation des achats</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores: dados de organizacao de compras</Text>
+            </IsoText>
+        </viewReferenceDescription>
+        <viewReferenceTargetUrl>getSearchForm.do</viewReferenceTargetUrl>
+        <viewReferenceTargetViewName>viewName=FI1510H</viewReferenceTargetViewName>
+        <viewReferenceTargetAutoExecute>false</viewReferenceTargetAutoExecute>
+        <viewReferenceActive>true</viewReferenceActive>
+        <viewReferenceSelfReferencable>false</viewReferenceSelfReferencable>
+        <activationFieldGroups>
+            <activationFieldGroup>
+                <activationFieldGroupActive>true</activationFieldGroupActive>
+                <activationFieldGroupUseTables>false</activationFieldGroupUseTables>
+                <activationFields>
+                    <activationField>
+                        <activationFieldName>mandt</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>lifnr</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                </activationFields>
+            </activationFieldGroup>
+        </activationFieldGroups>
+        <viewReferenceFieldMappings/>
+    </viewReference>
+    <FileDokus>
+        <FileObject>
+            <FileObjectName>FI1510H_userSettings.xml</FileObjectName>
+            <FileObjectDescr>Default personalization</FileObjectDescr>
+            <FileObjectPath>SAPECC6\FI1510H\FI1510H_userSettings.xml</FileObjectPath>
+        </FileObject>
+    </FileDokus>
+    <SqlFunctions/>
+    <VersionControlStatus>1</VersionControlStatus>
+    <BusinessObjectVersion>5</BusinessObjectVersion>
+    <Export></Export>
+    <Import></Import>
+    <Function></Function>
+    <ExportDyn></ExportDyn>
+    <Reportname>[xk03]</Reportname>
+    <ImportDyn></ImportDyn>
+    <Project></Project>
+    <SubProject></SubProject>
+    <Object></Object>
+    <Entity></Entity>
+    <TableObjects>
+        <TableObject>
+            <Position>1</Position>
+            <TableName>LFM1</TableName>
+            <ObjectName></ObjectName>
+            <SubObjectValue></SubObjectValue>
+            <NumberRangeNumber></NumberRangeNumber>
+            <ToYear></ToYear>
+            <FromNumber></FromNumber>
+            <ToNumber></ToNumber>
+            <NumberStand></NumberStand>
+            <External></External>
+            <PathPhys></PathPhys>
+            <FilePhys></FilePhys>
+            <Size></Size>
+            <FileLength></FileLength>
+        </TableObject>
+        <TableObject>
+            <Position>2</Position>
+            <TableName>LFM2</TableName>
+            <ObjectName></ObjectName>
+            <SubObjectValue></SubObjectValue>
+            <NumberRangeNumber></NumberRangeNumber>
+            <ToYear></ToYear>
+            <FromNumber></FromNumber>
+            <ToNumber></ToNumber>
+            <NumberStand></NumberStand>
+            <External></External>
+            <PathPhys></PathPhys>
+            <FilePhys></FilePhys>
+            <Size></Size>
+            <FileLength></FileLength>
+        </TableObject>
+    </TableObjects>
+    <additionalJoinOptions/>
+    <staticJoinOptions>
+        <staticJoinOption>
+            <joinTable>LFM2</joinTable>
+            <joinType>left</joinType>
+            <joins>
+                <join>
+                    <sourceTable>LFM1</sourceTable>
+                    <sourceFieldName>MANDT</sourceFieldName>
+                    <joinTable>LFM2</joinTable>
+                    <joinFieldName>MANDT</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+                <join>
+                    <sourceTable>LFM1</sourceTable>
+                    <sourceFieldName>LIFNR</sourceFieldName>
+                    <joinTable>LFM2</joinTable>
+                    <joinFieldName>LIFNR</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+                <join>
+                    <sourceTable>LFM1</sourceTable>
+                    <sourceFieldName>EKORG</sourceFieldName>
+                    <joinTable>LFM2</joinTable>
+                    <joinFieldName>EKORG</joinFieldName>
+                    <isValue>false</isValue>
+                    <negation>false</negation>
+                    <operator>equal</operator>
+                </join>
+            </joins>
+        </staticJoinOption>
+    </staticJoinOptions>
+    <valueFilters/>
+    <sortOptions/>
+    <blobEntries/>
+    <unitFullReferences>
+        <unitFullReference>
+            <tableName>LFM1</tableName>
+            <fieldName>MINBW</fieldName>
+            <refTableName>LFM1</refTableName>
+            <refFieldName>WAERS</refFieldName>
+            <dataType>CURR</dataType>
+        </unitFullReference>
+        <unitFullReference>
+            <tableName>LFM2</tableName>
+            <fieldName>MINBW</fieldName>
+            <refTableName>LFM2</refTableName>
+            <refFieldName>WAERS</refFieldName>
+            <dataType>CURR</dataType>
+        </unitFullReference>
+    </unitFullReferences>
+</BusinessObjectJoined>

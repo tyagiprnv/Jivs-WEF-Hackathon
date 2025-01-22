@@ -1,0 +1,43 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "LFM1",
+            "Position": "1"
+        },
+        {
+            "TableName": "LFM2",
+            "Position": "2"
+        }
+    ],
+    "StaticJoinOptions": [
+        {
+            "JoinTable": "LFM2",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "LFM1",
+                    "SourceField": "MANDT",
+                    "JoinTable": "LFM2",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFM1",
+                    "SourceField": "LIFNR",
+                    "JoinTable": "LFM2",
+                    "JoinField": "LIFNR",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFM1",
+                    "SourceField": "EKORG",
+                    "JoinTable": "LFM2",
+                    "JoinField": "EKORG",
+                    "Operator": "equal"
+                }
+            ]
+        }
+    ],
+    "ValueFilters": [],
+    "SortOptions": []
+}

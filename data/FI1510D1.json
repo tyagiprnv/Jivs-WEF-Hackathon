@@ -1,0 +1,88 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "LFBK",
+            "Position": "1"
+        },
+        {
+            "TableName": "BNKA",
+            "Position": "2"
+        },
+        {
+            "TableName": "TIBAN",
+            "Position": "3"
+        }
+    ],
+    "StaticJoinOptions": [
+        {
+            "JoinTable": "BNKA",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "LFBK",
+                    "SourceField": "MANDT",
+                    "JoinTable": "BNKA",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFBK",
+                    "SourceField": "BANKS",
+                    "JoinTable": "BNKA",
+                    "JoinField": "BANKS",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFBK",
+                    "SourceField": "BANKL",
+                    "JoinTable": "BNKA",
+                    "JoinField": "BANKL",
+                    "Operator": "equal"
+                }
+            ]
+        },
+        {
+            "JoinTable": "TIBAN",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "LFBK",
+                    "SourceField": "MANDT",
+                    "JoinTable": "TIBAN",
+                    "JoinField": "MANDT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFBK",
+                    "SourceField": "BANKS",
+                    "JoinTable": "TIBAN",
+                    "JoinField": "BANKS",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFBK",
+                    "SourceField": "BANKL",
+                    "JoinTable": "TIBAN",
+                    "JoinField": "BANKL",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFBK",
+                    "SourceField": "BANKN",
+                    "JoinTable": "TIBAN",
+                    "JoinField": "BANKN",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "LFBK",
+                    "SourceField": "LIFNR",
+                    "JoinTable": "TIBAN",
+                    "JoinField": "TABKEY",
+                    "Operator": "equal"
+                }
+            ]
+        }
+    ],
+    "ValueFilters": [],
+    "SortOptions": []
+}

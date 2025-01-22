@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BusinessObjectJoined>
+    <BusinessObjectName>FI1510C</BusinessObjectName>
+    <BusinessObjectType>JOINED</BusinessObjectType>
+    <BusinessObjectText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kreditor Mahndaten</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (dunning data)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (datos de reclamacion)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base de donnees fournisseurs (donnees de relance)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (dados de advertencia)</Text>
+        </IsoText>
+    </BusinessObjectText>
+    <BusinessObjectShortText>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kred. Mahndaten</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vend. dunning data</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (datos de reclamacion)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base de donnees fournisseurs (donnees de relance)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (dados de advertencia)</Text>
+        </IsoText>
+    </BusinessObjectShortText>
+    <BusinessObjectDescr>
+        <IsoText>
+            <IsoCode>de</IsoCode>
+            <Text>Kreditor-Lieferanten-Stamm Mahndaten</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>en</IsoCode>
+            <Text>Vendor master (dunning data)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>es</IsoCode>
+            <Text>Maestro de proveedores (datos de reclamacion)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>fr</IsoCode>
+            <Text>Base de donnees fournisseurs (donnees de relance)</Text>
+        </IsoText>
+        <IsoText>
+            <IsoCode>pt</IsoCode>
+            <Text>Mestre de fornecedores (dados de advertencia)</Text>
+        </IsoText>
+    </BusinessObjectDescr>
+    <BusinessObjectPosition>3</BusinessObjectPosition>
+    <BusinessObjectInMenue>false</BusinessObjectInMenue>
+    <ReleaseName>SAPECC6</ReleaseName>
+    <ModuleName>FI-AP</ModuleName>
+    <Standard>true</Standard>
+    <TestMode>false</TestMode>
+    <viewReference>
+        <viewReferenceName>FI1510C</viewReferenceName>
+        <viewReferenceText>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Kred. Mahndaten</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores (datos de reclamacion)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vend. dunning data</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Base de donnees fournisseurs (donnees de relance)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores (dados de advertencia)</Text>
+            </IsoText>
+        </viewReferenceText>
+        <viewReferenceDescription>
+            <IsoText>
+                <IsoCode>de</IsoCode>
+                <Text>Kreditor-Lieferanten-Stamm Mahndaten</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>es</IsoCode>
+                <Text>Maestro de proveedores (datos de reclamacion)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>en</IsoCode>
+                <Text>Vendor master (dunning data)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>fr</IsoCode>
+                <Text>Base de donnees fournisseurs (donnees de relance)</Text>
+            </IsoText>
+            <IsoText>
+                <IsoCode>pt</IsoCode>
+                <Text>Mestre de fornecedores (dados de advertencia)</Text>
+            </IsoText>
+        </viewReferenceDescription>
+        <viewReferenceTargetUrl>getSearchForm.do</viewReferenceTargetUrl>
+        <viewReferenceTargetViewName>viewName=FI1510C</viewReferenceTargetViewName>
+        <viewReferenceTargetAutoExecute>false</viewReferenceTargetAutoExecute>
+        <viewReferenceActive>true</viewReferenceActive>
+        <viewReferenceSelfReferencable>false</viewReferenceSelfReferencable>
+        <activationFieldGroups>
+            <activationFieldGroup>
+                <activationFieldGroupActive>true</activationFieldGroupActive>
+                <activationFieldGroupUseTables>true</activationFieldGroupUseTables>
+                <activationFields>
+                    <activationField>
+                        <activationFieldName>mandt</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>lifnr</activationFieldName>
+                        <activationTableName>lfa1</activationTableName>
+                    </activationField>
+                    <activationField>
+                        <activationFieldName>bukrs</activationFieldName>
+                        <activationTableName>lfb1</activationTableName>
+                    </activationField>
+                </activationFields>
+            </activationFieldGroup>
+        </activationFieldGroups>
+        <viewReferenceFieldMappings/>
+    </viewReference>
+    <FileDokus>
+        <FileObject>
+            <FileObjectName>FI1510C_userSettings.xml</FileObjectName>
+            <FileObjectDescr>Default personalization</FileObjectDescr>
+            <FileObjectPath>SAPECC6\FI1510C\FI1510C_userSettings.xml</FileObjectPath>
+        </FileObject>
+    </FileDokus>
+    <SqlFunctions/>
+    <VersionControlStatus>1</VersionControlStatus>
+    <BusinessObjectVersion>3</BusinessObjectVersion>
+    <Reportname>[XK03]</Reportname>
+    <TableObjects>
+        <TableObject>
+            <Position>1</Position>
+            <TableName>LFB5</TableName>
+        </TableObject>
+    </TableObjects>
+    <valueFilters/>
+    <sortOptions/>
+    <blobEntries/>
+</BusinessObjectJoined>

@@ -1,0 +1,55 @@
+{
+    "TableObjects": [
+        {
+            "TableName": "KNVK",
+            "Position": "1"
+        },
+        {
+            "TableName": "ADR6",
+            "Position": "2"
+        }
+    ],
+    "StaticJoinOptions": [
+        {
+            "JoinTable": "ADR6",
+            "JoinType": "left",
+            "Joins": [
+                {
+                    "SourceTable": "KNVK",
+                    "SourceField": "MANDT",
+                    "JoinTable": "ADR6",
+                    "JoinField": "CLIENT",
+                    "Operator": "equal"
+                },
+                {
+                    "SourceTable": "KNVK",
+                    "SourceField": "PRSNR",
+                    "JoinTable": "ADR6",
+                    "JoinField": "PERSNUMBER",
+                    "Operator": "equal"
+                }
+            ]
+        }
+    ],
+    "ValueFilters": [
+        {
+            "LogicalOperator": "AND",
+            "TableName": "KNVK",
+            "FieldName": "LIFNR",
+            "Operator": "<>",
+            "Value": "''"
+        }
+    ],
+    "SortOptions": [
+        {
+            "SourceTable": "KNVK",
+            "SourceField": "MANDT",
+            "Sorting": "ASC"
+        },
+        {
+            "SourceTable": "KNVK",
+            "SourceField": "LIFNR",
+            "Sorting": "ASC"
+        }
+    ]
+}
