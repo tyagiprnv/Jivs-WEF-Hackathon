@@ -1,61 +1,53 @@
 import streamlit as st
 import random
 import time
-from utils import ai_greetings, task2_greeting, check_for_tool, tools
-from agents import task_classifier, sql_system_prompt, is_sql_statement
+import json
+from utils import ai_greetings, is_url, is_sql_statement
+from agents import TaskDetectingAgent, SemanticSearch, EasyNavAgent, SQLXMLGenAgent
 from dotenv import dotenv_values
 from openai import OpenAI
 
+def initialize_env_variables():
+    if "client" not in st.session_state:
+        config = dotenv_values(".env")
+        st.session_state.client = OpenAI(api_key=config["OPENAI_KEY"])
 
-config = dotenv_values(".env")
+    if "task_detector_agent" not in st.session_state:
+        print("Task Detect Agent Started")
+        st.session_state.task_detector_agent = TaskDetectingAgent(st.session_state.client) 
 
-client = OpenAI(api_key=config["OPENAI_KEY"])
-tool_counter = 0
+    if "easy_nav_agent" not in st.session_state:
+        print("Easy Nav Agent Started")
+        st.session_state.search_system = SemanticSearch()
+        st.session_state.easy_nav_agent = EasyNavAgent(st.session_state.client, st.session_state.search_system)
+
+    if "sql_xml_gen_agent" not in st.session_state:
+        print("SQL XML Gen Agent Started")
+        st.session_state.sql_xml_gen_agent = SQLXMLGenAgent(st.session_state.client)
+        
+    if "tool_counter" not in st.session_state:
+        st.session_state.tool_counter = 0
+    
+    if "tool_check" not in st.session_state:
+        st.session_state.tool_check = None
+
+initialize_env_variables()
 
 def new_chat():
+    st.session_state.task_detector_agent = TaskDetectingAgent(st.session_state.client)
+    st.session_state.search_system = SemanticSearch()
+    st.session_state.easy_nav_agent = EasyNavAgent(st.session_state.client, st.session_state.search_system)
+    st.session_state.sql_xml_gen_agent = SQLXMLGenAgent(st.session_state.client)
+    st.session_state.tool_counter = 0
+    st.session_state.tool_check = None
+    
     st.session_state.messages = [
-        {
-            "role": "system",
-            "content": task_classifier()
-        },
+        st.session_state.task_detector_agent.task_detector_convo[0],
         {
             "role": "assistant",
             "content": f"{ai_greetings()}, I'm J ! How can I help you ?"
         }
     ]
-
-def sql_generator(user_query):
-    if "sql_gen_messages" not in st.session_state.keys():
-        st.session_state.sql_gen_messages = [
-            {
-                "role": "system",
-                "content": sql_system_prompt()
-            }
-        ]
-    
-    sql_gen_msgs = {
-            "role" : "user",
-            "content" : user_query
-        }
-    st.session_state.sql_gen_messages.append(sql_gen_msgs)
-    # st.session_state.messages.append(sql_gen_msgs)
-
-    response = client.chat.completions.create(
-        model = "gpt-4o-mini",
-        messages = st.session_state.sql_gen_messages
-    )
-    update_msg = {
-        "role":"assistant",
-        "content":response.choices[0].message.content
-    }
-    st.session_state.sql_gen_messages.append(update_msg)
-    st.session_state.messages.append(update_msg)
-    # if is_sql_statement(response.choices[0].message.content):
-    #     st.markdown(response.choices[0].message.content)
-    # else:
-    #     st.markdown(response.choices[0].message.content)
-        
-    return response.choices[0].message.content
 
 st.markdown("""
     <div style='text-align: center;'>
@@ -69,11 +61,9 @@ col3.button("New Chat", on_click=new_chat)
 
 # Initialize chat history
 if "messages" not in st.session_state.keys():
+    
     st.session_state.messages = [
-        {
-            "role": "system",
-            "content": task_classifier()
-        },
+        st.session_state.task_detector_agent.task_detector_convo[0],
         {
             "role": "assistant",
             "content": f"{ai_greetings()}, I'm ZENIX ! How can I help you ?"
@@ -85,7 +75,13 @@ for message in st.session_state.messages:
     if message["role"] == "system":
         pass
     elif message["role"] == "assistant":
-        with st.chat_message(message["role"]):
+        if message["content"] == "Calling Function":
+            pass
+        else:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+    elif message["role"] == "tool":
+        with st.chat_message("assistant"):
             st.markdown(message["content"])
     else:
         with st.chat_message(message["role"]):
@@ -100,28 +96,83 @@ if prompt := st.chat_input():
         st.markdown(prompt)
 
 # 
-if st.session_state.messages[-1]["role"] not in ["assistant"]:
+if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
     with st.chat_message("assistant"):
-        if tool_counter == 0:
-            tool_check =  check_for_tool(client, prompt, tools)
-            tool_counter = 1
+        
+        if st.session_state.tool_counter == 0:
+            # tool_check = check_for_tool(client, prompt, tools)
+            st.session_state.tool_check = st.session_state.task_detector_agent.generate_response(prompt)
+            st.session_state.tool_counter = 1
+            print("Tool Checker Response:", st.session_state.tool_check)
 
-        print("tool_check:", tool_check)
-
-        if tool_check.finish_reason == "tool_calls":
-            if tool_check.message.tool_calls[0].function.name == "sql_generator":
+        if st.session_state.tool_check.finish_reason == "tool_calls":
+            function_name = st.session_state.tool_check.message.tool_calls[0].function.name 
+            # function_args = json.loads(st.session_state.tool_check.message.tool_calls[0].function.arguments)
+            
+            if function_name == "link_generator":
+                print()
+                print(f"Entering Function:{function_name}")
+                
+                with st.spinner("Finding a related view"):
                     
-                print("===========")
+                    assistant_response = {
+                        "role":"assistant",
+                        "content":f"Calling Function",
+                        "tool_calls": [{"id":st.session_state.tool_check.message.tool_calls[0].id,
+                                        "type":"function",
+                                        "function":{"arguments":str(prompt),
+                                                    "name":function_name}}]
+                    }
+                    st.session_state.messages.append(assistant_response)
+                    
+                    response = st.session_state.easy_nav_agent.generate_response(prompt)
+                    st.markdown(response)
+                    
+                    tool_response = {
+                        "role": "tool",
+                        "content": response,
+                        "tool_call_id": st.session_state.tool_check.message.tool_calls[0].id,
+                        "name": function_name
+                    }
+                    st.session_state.messages.append(tool_response)
+                    
+                    if is_url(response):
+                        st.session_state.tool_counter = 0
+                    
+            elif function_name == "sql_generator":
+                print()
+                print(f"Entering Function:{function_name}")    
+                # print("===========")
                 # llm_response = task_classifier(prompt, st.session_state.messages, config["OPENAI_KEY"])
                 # sql_generator(prompt)
                 
                 with st.spinner("Generating SQL query..."):
-                    response = sql_generator(prompt)
+                    
+                    assistant_response = {
+                        "role":"assistant",
+                        "content":f"Calling Function",
+                        "tool_calls": [{"id":st.session_state.tool_check.message.tool_calls[0].id,
+                                        "type":"function",
+                                        "function":{"arguments":prompt,
+                                                    "name":function_name}}]
+                    }
+                    st.session_state.messages.append(assistant_response)
+                    
+                    response = st.session_state.sql_xml_gen_agent.generate_response(prompt)
                     st.markdown(response)
-                    print("response:",response)
+                    
+                    # print("response:",response)
+                    tool_response = {
+                        "role": "tool",
+                        "content": response,
+                        "tool_call_id": st.session_state.tool_check.message.tool_calls[0].id,
+                        "name": function_name
+                    }
+                    st.session_state.messages.append(tool_response)
+                    
                     if is_sql_statement(response):
                         print("generating xml")
-                        tool_counter = 0
+                        st.session_state.tool_counter = 0
 
                         # Can you write sql query to merge table LMF1 and LMF2
                         # Inner join on both columns
