@@ -16,13 +16,13 @@ api_key = ''
 client = OpenAI(api_key=api_key)
 
 def ask_gpt(sys_msg):
-    completion = client.chat.completions.create(model="gpt-4o",messages=[{"role": "system", "content": sys_msg}])
+    completion = client.chat.completions.create(model="gpt-4o",messages=[{"role": "user", "content": sys_msg}])
     result = completion.choices[0].message.content.split(",")
     return result[0]
 
 def get_sql(filepath):
     try:
-        with open(sql_filepath, 'r', encoding='utf-8') as file:
+        with open(filepath, 'r', encoding='utf-8') as file:
             return file.read()
     except FileNotFoundError:
         return "The file could not be found."
@@ -123,7 +123,7 @@ def generate_child_xmls(sql):
         resp = get_selects(parsed_dict['expressions'])
         if is_well_formed(resp):
             flag = False
-    components['select'] = resp
+            components['select'] = resp
     
     components['distinct'] = False if parsed_dict['distinct'] is None else True
     
@@ -135,31 +135,40 @@ def generate_child_xmls(sql):
         resp = get_TableObjects(all_tables_involved)
         if is_well_formed(resp):
             flag = False
-    components['all_tables'] = resp 
+            components['all_tables'] = resp 
     
     flag = True
     resp = None
     while flag:
+        if 'joins' not in parsed_dict.keys():
+            flag = False
+            continue
         resp = get_joins(parsed_dict['joins'])
         if is_well_formed(resp):
             flag = False
-    components['staticJoinOption'] = resp
+            components['staticJoinOption'] = resp
     
     flag = True
     resp = None
     while flag:
+        if 'where' not in parsed_dict.keys():
+            flag = False
+            continue
         resp = get_where(parsed_dict['where'])
         if is_well_formed(resp):
             flag = False
-    components['where'] = resp
+            components['where'] = resp
     
     flag = True
     resp = None
     while flag:
+        if 'order' not in parsed_dict.keys():
+            flag = False
+            continue
         resp = get_order(parsed_dict['order'])
         if is_well_formed(resp):
             flag = False
-    components['order'] = resp
+            components['order'] = resp
     
     return components
 
@@ -177,7 +186,8 @@ def create_final_xml(sql, schema_dict, child_xml):
     ET.register_namespace("@xmlns:xs", ns)
     if 'join' not in sql.lower():
         root = ET.Element("BusinessObjectSingle")
-    root = ET.Element("BusinessObjectJoined")
+    else:
+        root = ET.Element("BusinessObjectJoined")
     
     # Get view detail from user input saved in view.json
     viewName, viewDesc = get_view_details()
@@ -246,18 +256,21 @@ def create_final_xml(sql, schema_dict, child_xml):
     TableObjects = ET.fromstring(child_xml['all_tables'].replace('\n', '').strip())
     root.append(TableObjects)
     
-    staticJoinOptions = ET.fromstring(child_xml['staticJoinOption'].replace('\n', '').strip())
-    root.append(staticJoinOptions)
+    if BusinessObjectType == 'JOINED':
+        staticJoinOptions = ET.fromstring(child_xml['staticJoinOption'].replace('\n', '').strip())
+        root.append(staticJoinOptions)
     
-    valueFilters = ET.fromstring(child_xml['where'].replace('\n', '').strip())
-    root.append(valueFilters)
+    if 'where' in child_xml.keys():
+        valueFilters = ET.fromstring(child_xml['where'].replace('\n', '').strip())
+        root.append(valueFilters)
     
-    sortOptions = ET.fromstring(child_xml['order'].replace('\n', '').strip())
-    root.append(sortOptions)
+    if 'order' in child_xml.keys():
+        sortOptions = ET.fromstring(child_xml['order'].replace('\n', '').strip())
+        root.append(sortOptions)
     
     return root
 
-sql_filepath = "data/sample.sql"
+sql_filepath = "data/sample_2.sql"
 xsd_file = "data/standard.xsd"
 schema_dict = XMLSchema.meta_schema.decode(xsd_file)
 components_schema = {}
