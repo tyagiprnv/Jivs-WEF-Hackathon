@@ -372,7 +372,7 @@ class SQLtoXML:
             resp = self.get_selects(parsed_dict['expressions'])
             if self.is_well_formed(resp):
                 flag = False
-        components['select'] = resp
+                components['select'] = resp
         
         components['distinct'] = False if parsed_dict['distinct'] is None else True
         
@@ -384,44 +384,40 @@ class SQLtoXML:
             resp = self.get_TableObjects(all_tables_involved)
             if self.is_well_formed(resp):
                 flag = False
-        components['all_tables'] = resp 
+                components['all_tables'] = resp 
         
         flag = True
         resp = None
         while flag:
-            if "joins" in parsed_dict.keys():
-                resp = self.get_joins(parsed_dict['joins'])
-                if self.is_well_formed(resp):
-                    flag = False
-            else:
-                resp = "NA"
+            if 'joins' not in parsed_dict.keys():
                 flag = False
-                    
-        components['staticJoinOption'] = resp
+                continue
+            resp = get_joins(parsed_dict['joins'])
+            if is_well_formed(resp):
+                flag = False
+                components['staticJoinOption'] = resp
         
         flag = True
         resp = None
         while flag:
-            if "where" in parsed_dict.keys():
-                resp = self.get_where(parsed_dict['where'])
-                if self.is_well_formed(resp):
-                    flag = False
-            else:
-                resp = "NA"
+            if 'where' not in parsed_dict.keys():
                 flag = False
-        components['where'] = resp
+                continue
+            resp = get_joins(parsed_dict['where'])
+            if is_well_formed(resp):
+                flag = False
+                components['where'] = resp
         
         flag = True
         resp = None
         while flag:
-            if "order" in parsed_dict.keys():
-                resp = self.get_order(parsed_dict['order'])
-                if self.is_well_formed(resp):
-                    flag = False
-            else:
-                resp = "NA"
+            if 'order' not in parsed_dict.keys():
                 flag = False
-        components['order'] = resp
+                continue
+            resp = get_joins(parsed_dict['order'])
+            if is_well_formed(resp):
+                flag = False
+                components['order'] = resp
         
         return components
     
@@ -435,7 +431,8 @@ class SQLtoXML:
         ET.register_namespace("@xmlns:xs", ns)
         if 'join' not in sql.lower():
             root = ET.Element("BusinessObjectSingle")
-        root = ET.Element("BusinessObjectJoined")
+        else:
+            root = ET.Element("BusinessObjectJoined")
         
         # Get view detail from user input saved in view.json
         viewName, viewDesc = self.get_view_details()
@@ -504,14 +501,17 @@ class SQLtoXML:
         TableObjects = ET.fromstring(child_xml['all_tables'].replace('\n', '').strip())
         root.append(TableObjects)
         
-        staticJoinOptions = ET.fromstring(child_xml['staticJoinOption'].replace('\n', '').strip())
-        root.append(staticJoinOptions)
+        if BusinessObjectType == "JOINED":
+            staticJoinOptions = ET.fromstring(child_xml['staticJoinOption'].replace('\n', '').strip())
+            root.append(staticJoinOptions)
         
-        valueFilters = ET.fromstring(child_xml['where'].replace('\n', '').strip())
-        root.append(valueFilters)
+        if 'where' in child_xml.keys():
+            valueFilters = ET.fromstring(child_xml['where'].replace('\n', '').strip())
+            root.append(valueFilters)
         
-        sortOptions = ET.fromstring(child_xml['order'].replace('\n', '').strip())
-        root.append(sortOptions)
+        if 'order' in child_xml.keys():
+            sortOptions = ET.fromstring(child_xml['order'].replace('\n', '').strip())
+            root.append(sortOptions)
         
         return root
     
