@@ -26,11 +26,13 @@ class SemanticSearch:
             for i in range(len(results["ids"][0])):
                 view_name = results["metadatas"][0][i].get("view_name")
                 fields_str = results["metadatas"][0][i].get("fields")
+                description = results["metadatas"][0][i].get("description", "No description available")  # Extract description
                 if view_name and fields_str:
                     try:
                         fields = ast.literal_eval(fields_str)
                         relevant_views.append({
                             "view_name": view_name,
+                            "description": description,  # Include description
                             "fields": fields
                         })
                     except (ValueError, SyntaxError) as e:
@@ -46,24 +48,22 @@ class JIVSChatbot:
         self.search_system = search_system
         self.llm = OpenAI(api_key=api_key)
         self.conversation = [{"role": "system", "content": """You are a SQL expert and a helpful assistant for the JIVS system. 
-                Your task is to help users find the correct view and generate a URL to access it. 
+                Your task is to help users find the correct view. 
                 If you are unsure about the user's query, ask clarifying questions. 
-                Only generate the URL when you are confident about the correct view."""}]
+                When you are confident about the correct view, provide the view name like Viewname:'viewname'"""}]
     
     def generate_response(self, query: str) -> str:
         relevant_views = self.search_system.find_relevant_views(query)
         
         prompt = f"""User query: {query}
         
-        Available views:
-        {[v['view_name'] for v in relevant_views]}
+        Available views and their descriptions:
+        {[f"{v['view_name']} (Description: {v.get('description', 'No description available')})" for v in relevant_views]}
         
         Fields in views:
-        {[v['fields'] for v in relevant_views]}
+        {[f"{v['view_name']}: {[f['field_name'] for f in v['fields']]}" for v in relevant_views]}
         
-        Determine the correct view and required parameters. 
-        If you are unsure, ask clarifying questions. 
-        Only generate the URL if you are confident about the correct view."""
+        Determine the correct view based on the user's query."""
         
         print(prompt)
         
@@ -82,9 +82,9 @@ class JIVSChatbot:
         return f"https://wef2025.cloud.jivs.com/jivs/getSearchForm.do?viewName={view_name}&packageName=sap.ecc60kjl"
 
     def extract_view_name(self, response: str) -> str:
-        match = re.search(r"\.([A-Za-z0-9]+)\.", response) 
+        match = re.search(r"Viewname:\s*'([A-Za-z0-9_]+)'", response, re.IGNORECASE)
         if match:
-            return match.group(1)  
+            return match.group(1)
         return None
 
 
@@ -101,7 +101,7 @@ def main():
         response = chatbot.generate_response(query)
         print("\nChatbot:", response)
         
-        if "view" in response.lower() and "confident" in response.lower():
+        if "viewname:" in response.lower():
             view_name = chatbot.extract_view_name(response)
             if view_name:
                 url = chatbot.generate_url(view_name)

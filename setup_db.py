@@ -16,6 +16,7 @@ def parse_view(xml_content: str, descriptions: Dict[str, str]) -> Dict:
 
     view_data = {
         "view_name": view_name,
+        "description": descriptions.get(view_name, ""), 
         "fields": []
     }
 
@@ -26,20 +27,20 @@ def parse_view(xml_content: str, descriptions: Dict[str, str]) -> Dict:
         field_name = field.findtext("fieldName")
         table_name = field.findtext("tableName")
         datatype = field.find("dataType/dataTypeName").text if field.find("dataType/dataTypeName") is not None else ""
-        description = descriptions.get(view_name, "") 
 
         # Create a unique key for the field
-        field_key = (field_name, table_name, datatype, description)
+        field_key = (field_name, table_name, datatype)
 
         if field_key not in unique_fields:
             unique_fields.add(field_key)
             field_data = {
                 "field_name": field_name,
                 "table_name": table_name,
-                "datatype": datatype,
-                "description": description  
+                "datatype": datatype
             }
             view_data["fields"].append(field_data)
+    
+    print(view_data['description'])
 
     return view_data
 
@@ -64,8 +65,8 @@ def load_all_views_from_directory(directory: str, excel_file: str) -> List[Dict]
 def create_search_documents(views: List[Dict]) -> List[str]:
     documents = []
     for view in views:
-        doc = f"View {view['view_name']} contains: "
-        doc += ". ".join([f"{field['field_name']} ({field['description']})" 
+        doc = f"View {view['view_name']} ({view['description']}) contains: "
+        doc += ". ".join([f"{field['field_name']} ({field['table_name']}, {field['datatype']})" 
                         for field in view['fields']])
         documents.append(doc)
     return documents
@@ -80,7 +81,11 @@ def setup_chroma_db(views: List[Dict], documents: List[str], embeddings: List[Li
         ids=[str(i) for i in range(len(documents))],
         embeddings=embeddings,
         documents=documents,
-        metadatas=[{"view_name": view["view_name"], "fields": str(view["fields"])} for view in views]
+        metadatas=[{
+            "view_name": view["view_name"],
+            "description": view.get("description", "No description available"),  # Include description
+            "fields": str(view["fields"])
+        } for view in views]
     )
     print(f"Database setup complete. Persisted to {persist_dir}")
 
