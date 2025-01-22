@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import sqlglot
 import xml.etree.ElementTree as ET
 from lxml import etree
@@ -6,6 +9,7 @@ import os
 import pandas as pd
 from openai import OpenAI
 import xml.dom.minidom as minidom
+import json
 
 mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions'}
 api_key = ''
@@ -25,18 +29,17 @@ def get_sql(filepath):
     except Exception as e:
         return f"An error occurred: {str(e)}"
     
-def extractDataType(class_string):
-    last_dot_index = class_string.rfind('.')
-    close_bracket_index = class_string.rfind('\'>')
-    class_name = class_string[last_dot_index + 1:close_bracket_index]
-    return class_name
+def get_view_details():
+    with open("output/view.json", 'r') as json_file:
+        data = json.load(json_file)
+        return data['viewName'], data['viewDesc']
 
 def is_well_formed(xml_text):
     try:
         ET.fromstring(xml_text)
         return True
     except ET.ParseError as e:
-        print(f"Regenerating Bad xml")
+        # print(f"Regenerating Bad xml")
         return False
     
 def get_selects(vals):
@@ -176,11 +179,13 @@ def create_final_xml(sql, schema_dict, child_xml):
         root = ET.Element("BusinessObjectSingle")
     root = ET.Element("BusinessObjectJoined")
     
+    # Get view detail from user input saved in view.json
+    viewName, viewDesc = get_view_details()
     # Add elements now
-    BusinessObjectName = 'FI1510'
+    BusinessObjectName = viewName
     BusinessObjectType = 'JOINED' if 'join' in sql.lower() else 'SINGLE'
-    BusinessObjectDescription = 'Vendor master data'
-    iso_lang = ['de', 'es', 'fr', 'pt']
+    BusinessObjectDescription = viewDesc
+    iso_lang = ['de', 'en', 'es', 'fr', 'pt']
     IsoText = {}
     IsoText['en'] = BusinessObjectDescription
     for i in iso_lang:
