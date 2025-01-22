@@ -27,8 +27,8 @@
                     <xs:element name="SqlFunctions" type="SqlFunctions" />
                     <xs:element name="UseTheDistinctClauseInSqlSelectQuery" type="xs:boolean" />
                     <xs:element name="TableObjects" type="TableObjects" />
-                    <xs:element name="valueFilters" type="ValueFilters" />
-                    <xs:element name="sortOptions" type="SortOptions" />
+                    <xs:element name="ValueFilters" type="ValueFilters" />
+                    <xs:element name="SortOptions" type="SortOptions" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -49,10 +49,9 @@
                     <xs:element name="SqlFunctions" type="SqlFunctions" />
                     <xs:element name="UseTheDistinctClauseInSqlSelectQuery" type="xs:boolean" />
                     <xs:element name="TableObjects" type="TableObjects" />
-                    <xs:element name="additionalJoinOptions" type="xs:anyType" />
-                    <xs:element name="staticJoinOptions" type="StaticJoinOptions" />
-                    <xs:element name="valueFilters" type="ValueFilters" />
-                    <xs:element name="sortOptions" type="SortOptions" />
+                    <xs:element name="StaticJoinOptions" type="StaticJoinOptions" />
+                    <xs:element name="ValueFilters" type="ValueFilters" />
+                    <xs:element name="SortOptions" type="SortOptions" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -102,18 +101,6 @@
                     <xs:sequence>
                         <xs:element name="Position" type="xs:int" nillable="false"/>
                         <xs:element name="TableName" type="xs:string" />
-                        <xs:element name="ObjectName" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="SubObjectValue" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="NumberRangeNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="ToYear" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="FromNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="ToNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="NumberStand" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="External" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="PathPhys" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="FilePhys" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="Size" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="FileLength" type="xs:string" minOccurs="0" maxOccurs="1"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -162,9 +149,8 @@
                         <xs:element name="fieldName" type="xs:string" />
                         <xs:element name="operator" type="xs:string" />
                         <xs:element name="value" type="xs:string" />
-                        <xs:element name="leftParenthesis" type="xs:string" minOccurs="0" />
-                        <xs:element name="rightParenthesis" type="xs:string" minOccurs="0" />
-                        <!-- Optional fields for parentheses can be added here if needed -->
+                        <xs:element name="leftParenthesis" type="xs:string" />
+                        <xs:element name="rightParenthesis" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
