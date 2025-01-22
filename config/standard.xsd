@@ -27,8 +27,8 @@
                     <xs:element name="SqlFunctions" type="SqlFunctions" />
                     <xs:element name="UseTheDistinctClauseInSqlSelectQuery" type="xs:boolean" />
                     <xs:element name="TableObjects" type="TableObjects" />
-                    <xs:element name="ValueFilters" type="ValueFilters" />
-                    <xs:element name="SortOptions" type="SortOptions" />
+                    <xs:element name="ValueFilters" type="ValueFilters" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="SortOptions" type="SortOptions" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -50,8 +50,8 @@
                     <xs:element name="UseTheDistinctClauseInSqlSelectQuery" type="xs:boolean" />
                     <xs:element name="TableObjects" type="TableObjects" />
                     <xs:element name="StaticJoinOptions" type="StaticJoinOptions" />
-                    <xs:element name="ValueFilters" type="ValueFilters" />
-                    <xs:element name="SortOptions" type="SortOptions" />
+                    <xs:element name="ValueFilters" type="ValueFilters" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="SortOptions" type="SortOptions" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
