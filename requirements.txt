@@ -1,0 +1,8 @@
+streamlit
+validators
+python-dotenv
+openai
+sentence_transformers
+chromadb
+xmlschema
+sqlglot
