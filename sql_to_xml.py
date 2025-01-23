@@ -11,7 +11,7 @@ from openai import OpenAI
 import xml.dom.minidom as minidom
 import json
 
-mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions'}
+mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions', 'group': 'AggregateOptions'}
 api_key = ''
 client = OpenAI(api_key=api_key)
 
@@ -103,8 +103,21 @@ def get_order(vals):
     if vals is None:
         return False
     order_xsd = components_schema[mapping_sql_xmlschema['order']]
-    msg = f'''For a given SQL WHERE clause and xsd definition as json
+    msg = f'''For a given SQL ORDER clause and xsd definition as json
     {order_xsd}
+    write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
+    
+    {vals}
+    '''
+    resp = ask_gpt(msg)
+    return resp
+
+def get_group(vals):
+    if vals is None:
+        return False
+    group_xsd = components_schema[mapping_sql_xmlschema['group']]
+    msg = f'''For a given SQL GROUP BY clause and xsd definition as json
+    {group_xsd}
     write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
     
     {vals}
@@ -169,6 +182,17 @@ def generate_child_xmls(sql):
         if is_well_formed(resp):
             flag = False
             components['order'] = resp
+            
+    flag = True
+    resp = None
+    while flag:
+        if 'group' not in parsed_dict.keys():
+            flag = False
+            continue
+        resp = get_group(parsed_dict['group']).replace("```","").replace("xml","")
+        if is_well_formed(resp):
+            flag = False
+            components['group'] = resp
     
     return components
 
