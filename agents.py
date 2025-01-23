@@ -254,7 +254,7 @@ class SQLXMLGenAgent:
                     - If you do not have enough information: Return a clarifying question or list of questions to the user, asking them to specify the missing details.
                 8. If the user hints at aborting or cancelling his request, strictly respond quit.
             If you are unsure about the user's query, ask clarifying questions. Be as informative as possible while clarifying.
-            Only return one SQL query as text or the question you want to ask or quit if the user wants to cancel or change his request. Do not provide any additional explantion or information''' 
+            Only return one SQL query as text (starting with sql:) or the question you want to ask or quit if the user wants to cancel or change his request. Do not provide any additional explantion or information''' 
             }]
     
     def generate_response(self, prompt):

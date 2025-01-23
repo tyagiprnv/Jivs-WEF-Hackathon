@@ -230,10 +230,11 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                             }
                             st.session_state.messages.append(tool_response)
                             
-                            query_to_check = str(response).replace("```","").replace("sql","")
+                            query_to_check = str(response).replace("```","").replace("sql","").replace(":","")
                             
                             if is_sql_statement(query_to_check):
                                 print("SQL Done")
+                                st.success("Valid SQL")
                                 st.session_state.task_detector_agent.task_detector_convo.append(tool_response)
                                 st.session_state.generated_query = query_to_check         
                                 print("Lets Generate XML")
@@ -243,8 +244,11 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                                     st.markdown(question)
                                     st.session_state.messages.append({"role":"assistant", "content": question})
                                     st.session_state.xml_step += 1
+                            else:
+                                if "sql" in str(response):
+                                    print("Need more info")
+                                    st.warning("This syntax is not correct. Please provide more information to generate a correct statement")
                                 
-                    
                 else:
                     with st.spinner("Generating XML"):    
                         if st.session_state.xml_step == 1:
