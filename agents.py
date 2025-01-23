@@ -87,7 +87,8 @@ class TaskDetectingAgent:
         response = self.llm.chat.completions.create(
             model = "gpt-4o-mini",  
             messages=self.task_detector_convo,
-            tools = self.tools
+            tools = self.tools,
+            temperature = 0
         )
         if response.choices[0].finish_reason == "tool_calls":
             assistant_response = {
@@ -267,7 +268,8 @@ class SQLXMLGenAgent:
         
         response = self.llm.chat.completions.create(
             model = "gpt-4o-mini",  
-            messages = self.sql_gen_messages
+            messages = self.sql_gen_messages,
+            temperature = 0
         )
         
         self.sql_gen_messages.append({"role": "assistant", "content": response.choices[0].message.content})
@@ -288,6 +290,7 @@ class SQLtoXML:
     def ask_gpt(self, msg):
         completion = self.llm.chat.completions.create(
             model="gpt-4o", 
+            temperature = 0,
             messages=[{"role": "user", "content": msg}])
         
         result = completion.choices[0].message.content.split(",")
