@@ -103,7 +103,7 @@ def get_order(vals):
     if vals is None:
         return False
     order_xsd = components_schema[mapping_sql_xmlschema['order']]
-    msg = f'''For a given SQL ORDER clause and xsd definition as json
+    msg = f'''For a given SQL ORDER BY clause and xsd definition as json
     {order_xsd}
     write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
     
@@ -291,6 +291,10 @@ def create_final_xml(sql, schema_dict, child_xml):
     if 'order' in child_xml.keys():
         sortOptions = ET.fromstring(child_xml['order'].replace('\n', '').strip())
         root.append(sortOptions)
+        
+    if 'group' in child_xml.keys():
+        aggregateOptions = ET.fromstring(child_xml['group'].replace('\n', '').strip())
+        root.append(aggregateOptions)
     
     return root
 

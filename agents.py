@@ -273,7 +273,7 @@ class SQLtoXML:
     def __init__(self, client):
     
         self.llm = client
-        self.mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions'}
+        self.mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions', 'group': 'AggregateOptions'}
         self.schema_dict = XMLSchema.meta_schema.decode("config/standard.xsd")
         self.components_schema = {}
         for i, sch in enumerate(self.schema_dict['xs:complexType']):
@@ -368,8 +368,21 @@ class SQLtoXML:
         if vals is None:
             return False
         order_xsd = self.components_schema[self.mapping_sql_xmlschema['order']]
-        msg = f'''For a given SQL WHERE clause and xsd definition as json
+        msg = f'''For a given SQL ORDER BY clause and xsd definition as json
         {order_xsd}
+        write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
+    
+        {vals}
+        '''
+        resp = self.ask_gpt(msg)
+        return resp
+    
+    def get_group(self, vals):
+        if vals is None:
+            return False
+        group_xsd = self.components_schema[self.mapping_sql_xmlschema['group']]
+        msg = f'''For a given SQL GROUP BY clause and xsd definition as json
+        {group_xsd}
         write the xml entries only with case sensitive tags. Please do not provide any explanations. Do not specify xml anywhere.
     
         {vals}
@@ -434,6 +447,17 @@ class SQLtoXML:
             if self.is_well_formed(resp):
                 flag = False
                 components['order'] = resp
+                
+        flag = True
+        resp = None
+        while flag:
+            if 'group' not in parsed_dict.keys():
+                flag = False
+                continue
+            resp = self.get_group(parsed_dict['group']).replace("```","").replace("xml","")
+            if self.is_well_formed(resp):
+                flag = False
+                components['group'] = resp
         
         return components
     
@@ -528,6 +552,10 @@ class SQLtoXML:
         if 'order' in child_xml.keys():
             sortOptions = ET.fromstring(child_xml['order'].replace('\n', '').strip())
             root.append(sortOptions)
+            
+        if 'group' in child_xml.keys():
+            aggregateOptions = ET.fromstring(child_xml['group'].replace('\n', '').strip())
+            root.append(aggregateOptions)
         
         return root
     
