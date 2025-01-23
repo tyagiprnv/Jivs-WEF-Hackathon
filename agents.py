@@ -149,7 +149,7 @@ class EasyNavAgent:
              Your task is to help users find the correct view/table.
              Please follow the following steps:
                 - Based on the Available views and the fields of the views you get, select the view you find the most relevant according to the user query.
-                - If you are unsure about the user's query, ask clarifying questions.
+                - If you are unsure about the user's query, ask clarifying questions. Mention the available tablenames, columnnames etc while clarifying. Be as informative as possible.
                 - Only return one view name when you are confident about the correct view.
                 - If confident, strictly follow this reponse format:
                     view, confident
@@ -170,7 +170,7 @@ class EasyNavAgent:
         
         Please follow the following steps:
             - Based on the Available views and the fields of the views you get, select the view you find the most relevant according to the user query.
-            - If you are unsure about the user's query, ask clarifying questions.
+            - If you are unsure about the user's query, ask clarifying questions. Mention the available tablenames, columnnames etc while clarifying. Be as informative as possible.
             - Only return one view name when you are confident about the correct view.
             - If confident, strictly follow this reponse format:
                 view, confident
@@ -228,6 +228,7 @@ class SQLXMLGenAgent:
             Follow these steps:
                 1. Check for Table Name:
                     - Identify if the user has specified a table name.
+                    - If you couldn't identify tablename, suggest the user relevant tables.
                     - If the user has not given a table name, or if the provided table name is not in the known schema, ask the user to choose a table name from the valid table list.
                 2. Check for Required Columns and Conditions:
                     - Identify the columns or attributes the user wants to select, filter on, group by, or order by.
@@ -252,6 +253,7 @@ class SQLXMLGenAgent:
                     - If you have enough information: Return only one SQL query as a text. No other information.
                     - If you do not have enough information: Return a clarifying question or list of questions to the user, asking them to specify the missing details.
                 8. If the user hints at aborting or cancelling his request, strictly respond quit.
+            If you are unsure about the user's query, ask clarifying questions. Be as informative as possible while clarifying.
             Only return one SQL query as text or the question you want to ask or quit if the user wants to cancel or change his request. Do not provide any additional explantion or information''' 
             }]
     
