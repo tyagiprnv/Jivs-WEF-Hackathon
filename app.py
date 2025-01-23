@@ -3,7 +3,7 @@ import random
 import time
 import validators
 import json
-from utils import ai_greetings, is_url, is_sql_statement
+from utils import ai_greetings, is_sql_statement, custom_css
 from agents import TaskDetectingAgent, SemanticSearch, EasyNavAgent, SQLXMLGenAgent, SQLtoXML
 from dotenv import dotenv_values
 from openai import OpenAI
@@ -52,9 +52,11 @@ st.set_page_config(
     layout = "wide"
 )
 
+st.markdown(custom_css, unsafe_allow_html=True)
+
 with st.sidebar:
-    st.title("AppName")
-    # st.image("")
+    st.title("ZENIX")
+    st.image("./images/jivs-logo-web.png")
     
     # st.subheader("Select which LLM you want to use:")
     options = ["GPT-4o-Mini", "LLaMa 3.2B (Still in Development)"]
@@ -88,7 +90,7 @@ def new_chat():
         st.session_state.task_detector_agent.task_detector_convo[0],
         {
             "role": "assistant",
-            "content": f"{ai_greetings()}, I'm J ! How can I help you ?"
+            "content": f"{ai_greetings()}, I'm ZENIX ! How can I help you ?"
         }
     ]
 
@@ -114,6 +116,7 @@ if "messages" not in st.session_state.keys():
     ]
 
 # Display chat messages from history on app rerun
+assistant_avatar_image = "images/jivs-avatar.png"
 for message in st.session_state.messages:
     if message["role"] == "system":
         pass
@@ -121,10 +124,10 @@ for message in st.session_state.messages:
         if message["content"] == "Calling Function":
             pass
         else:
-            with st.chat_message(message["role"]):
+            with st.chat_message(message["role"], avatar=assistant_avatar_image):
                 st.markdown(message["content"])
     elif message["role"] == "tool":
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar=assistant_avatar_image):
             st.markdown(message["content"])
     else:
         with st.chat_message(message["role"]):
@@ -170,20 +173,25 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                     st.session_state.messages.append(assistant_response)
                     
                     response = st.session_state.easy_nav_agent.generate_response(prompt)
-                    
-                    if validators.url(response):
+                    if response == "quit":
                         st.session_state.tool_counter = 0
-                        response = f"Here's the link to the related view: {response}"
+                        st.markdown("Aborting Process. Feel free to ask a new question")
+                        print("exiting function call")
+                    else:
+                        if validators.url(response):
+                            st.session_state.tool_counter = 0
+                            response = f"Here's the link to the related view: {response}"
                     
-                    st.markdown(response)
+                        st.markdown(response)
                     
-                    tool_response = {
-                        "role": "tool",
-                        "content": response,
-                        "tool_call_id": st.session_state.tool_check.message.tool_calls[0].id,
-                        "name": function_name
-                    }
-                    st.session_state.messages.append(tool_response)
+                        tool_response = {
+                            "role": "tool",
+                            "content": response,
+                            "tool_call_id": st.session_state.tool_check.message.tool_calls[0].id,
+                            "name": function_name
+                        }
+                        st.session_state.messages.append(tool_response)
+                        st.session_state.task_detector_agent.task_detector_convo.append(tool_response)
                     
             elif function_name == "sql_generator":
                 print()
@@ -192,11 +200,12 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                 if not st.session_state.generating_xml:
                     
                     with st.spinner("Generating SQL query..."):
-                    
+                        tool_id = st.session_state.tool_check.message.tool_calls[0].id
+                        
                         assistant_response = {
                             "role":"assistant",
                             "content":f"Calling Function",
-                            "tool_calls": [{"id":st.session_state.tool_check.message.tool_calls[0].id,
+                            "tool_calls": [{"id":tool_id,
                                             "type":"function",
                                             "function":{"arguments":prompt,
                                                         "name":function_name}}]
@@ -204,29 +213,36 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                         st.session_state.messages.append(assistant_response)
                     
                         response = st.session_state.sql_xml_gen_agent.generate_response(prompt)
-                        st.markdown(response)
+                        
+                        if response == "quit":
+                            st.session_state.tool_counter = 0
+                            st.markdown("Aborting Process. Feel free to ask a new question")
+                            print("exiting function call")
+                        else:
+                            st.markdown(response)
                     
-                        # print("response:",response)
-                        tool_response = {
-                            "role": "tool",
-                            "content": response,
-                            "tool_call_id": st.session_state.tool_check.message.tool_calls[0].id,
-                            "name": function_name
-                        }
-                        st.session_state.messages.append(tool_response)
-                        
-                        query_to_check = str(response).replace("```","").replace("sql","")
-                        
-                        if is_sql_statement(query_to_check):
-                            print("SQL Done")
-                            st.session_state.generated_query = query_to_check         
-                            print("Lets Generate XML")
-                            st.session_state.generating_xml = True
-                            if st.session_state.xml_step == 0:
-                                question = "To generate an XML, Please give a name for this new view"
-                                st.markdown(question)
-                                st.session_state.messages.append({"role":"assistant", "content": question})
-                                st.session_state.xml_step += 1
+                            # print("response:",response)
+                            tool_response = {
+                                "role": "tool",
+                                "content": response,
+                                "tool_call_id": st.session_state.tool_check.message.tool_calls[0].id,
+                                "name": function_name
+                            }
+                            st.session_state.messages.append(tool_response)
+                            
+                            query_to_check = str(response).replace("```","").replace("sql","")
+                            
+                            if is_sql_statement(query_to_check):
+                                print("SQL Done")
+                                st.session_state.task_detector_agent.task_detector_convo.append(tool_response)
+                                st.session_state.generated_query = query_to_check         
+                                print("Lets Generate XML")
+                                st.session_state.generating_xml = True
+                                if st.session_state.xml_step == 0:
+                                    question = "To generate an XML, Please give a name for this new view"
+                                    st.markdown(question)
+                                    st.session_state.messages.append({"role":"assistant", "content": question})
+                                    st.session_state.xml_step += 1
                                 
                     
                 else:
@@ -248,10 +264,11 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                                 
                                 
                             xml_creator = SQLtoXML(st.session_state.client)
-                            xml_creator.convert_sql_to_xml()
-                            st.markdown("XML Successfully Generated")
+                            path = xml_creator.convert_sql_to_xml()
+                            st.success(f"XML Successfully Generated and saved in {path}")
                             print("XML Successfully Generated")
-                            st.session_state.messages.append({"role":"assistant", "content": "XML Successfully Generated"})
+                            print(st.session_state.messages[3])
+                            st.session_state.messages.append({"role":"assistant", "content": f"XML Successfully Generated and saved in {path}"})
                                                         
                             st.session_state.generating_xml = False
                             st.session_state.xml_step = 0
@@ -259,21 +276,10 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                             st.session_state.tool_counter = 0
                             st.session_state.generated_query = ""
 
-                        # Can you write sql query to merge table LFM1 and LFM2
-                        # Inner join on both columns
-                    
-                    # print("Printing response in main")
-                    # print(response)
-                    # st.markdown(response)
-                    # return_messages = {
-                        # "role": "assistant",
-                        # "content": response
-                    # }
         else:
             st.session_state.tool_counter = 0
             st.markdown(st.session_state.tool_check.message.content)
             st.session_state.messages.append({"role":"assistant", "content":st.session_state.tool_check.message.content})
-    # st.session_state.messages.extend(return_messages)
 
 
 

@@ -153,7 +153,8 @@ class EasyNavAgent:
                 - Only return one view name when you are confident about the correct view.
                 - If confident, strictly follow this reponse format:
                     view, confident
-                - Do not return any additional information"""}]
+                - Do not return any additional information
+                - If the user hints at aborting or cancelling his request, strictly respond quit."""}]
     
     def generate_response(self, prompt: str) -> str:
         
@@ -250,7 +251,8 @@ class SQLXMLGenAgent:
                 7. Final Response Format:
                     - If you have enough information: Return only one SQL query as a text. No other information.
                     - If you do not have enough information: Return a clarifying question or list of questions to the user, asking them to specify the missing details.
-            Only return one SQL query as text or the question you want to ask. Do not provide any additional explantion or information''' 
+                8. If the user hints at aborting or cancelling his request, strictly respond quit.
+            Only return one SQL query as text or the question you want to ask or quit if the user wants to cancel or change his request. Do not provide any additional explantion or information''' 
             }]
     
     def generate_response(self, prompt):
@@ -538,8 +540,12 @@ class SQLtoXML:
         rt = self.create_final_xml(sql, child_xml_dict)
         tree = ET.ElementTree(rt) 
         
-        output_xml_file = f"config/{viewName}.xml"
+        output_xml_file = f"config\{viewName}.xml"
         tree.write(output_xml_file, encoding="utf-8", xml_declaration=True)
+        current_wd = os.getcwd()
+        return os.path.join(current_wd, output_xml_file)
+        
+        
     
     
 
