@@ -29,6 +29,7 @@
                     <xs:element name="TableObjects" type="TableObjects" />
                     <xs:element name="ValueFilters" type="ValueFilters" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="SortOptions" type="SortOptions" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="AggregateOptions" type="AggregateOptions" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -52,6 +53,7 @@
                     <xs:element name="StaticJoinOptions" type="StaticJoinOptions" />
                     <xs:element name="ValueFilters" type="ValueFilters" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="SortOptions" type="SortOptions" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="AggregateOptions" type="AggregateOptions" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -171,4 +173,16 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="AggregateOptions">
+        <xs:sequence>
+            <xs:element name="aggregateOption" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="sourceTable" type="xs:string" />
+                        <xs:element name="sourceField" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>
