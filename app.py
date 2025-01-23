@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 import time
+import validators
 import json
 from utils import ai_greetings, is_url, is_sql_statement
 from agents import TaskDetectingAgent, SemanticSearch, EasyNavAgent, SQLXMLGenAgent, SQLtoXML
@@ -45,6 +46,31 @@ def initialize_env_variables():
 
 initialize_env_variables()
 
+st.set_page_config(
+    initial_sidebar_state = "expanded",
+    page_title = "AppName",
+    layout = "wide"
+)
+
+with st.sidebar:
+    st.title("AppName")
+    # st.image("")
+    
+    # st.subheader("Select which LLM you want to use:")
+    options = ["GPT-4o-Mini", "LLaMa 3.2B (Still in Development)"]
+    selected_model_name = st.sidebar.selectbox(
+        "Select which LLM to use",
+        options,
+        key = "selected_model"
+    )
+    mapping = {
+        "GPT-4o-Mini":"gpt-4o-mini",
+        "LLaMa 3.2B (Still in Development)": "llama3"
+    }
+    selected_model = mapping.get(selected_model_name)
+    if selected_model == "llama3":
+        selected_model = "gpt-4o-mini"
+        
 def new_chat():
     
     st.session_state.task_detector_agent = TaskDetectingAgent(st.session_state.client)
@@ -66,11 +92,11 @@ def new_chat():
         }
     ]
 
-st.markdown("""
-    <div style='text-align: center;'>
-        <h1> Welcome to SQL </h1>
-    </div>
-""", unsafe_allow_html=True)
+# st.markdown("""
+#     <div style='text-align: center;'>
+#         <h1> Welcome to SQL </h1>
+#     </div>
+# """, unsafe_allow_html=True)
 
 
 col1, col2, col3 = st.columns([1, 5, 1])
@@ -118,6 +144,7 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
         
         if st.session_state.tool_counter == 0:
             # tool_check = check_for_tool(client, prompt, tools)
+            
             st.session_state.tool_check = st.session_state.task_detector_agent.generate_response(prompt)
             st.session_state.tool_counter = 1
             print("Tool Checker Response:", st.session_state.tool_check)
@@ -143,6 +170,11 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                     st.session_state.messages.append(assistant_response)
                     
                     response = st.session_state.easy_nav_agent.generate_response(prompt)
+                    
+                    if validators.url(response):
+                        st.session_state.tool_counter = 0
+                        response = f"Here's the link to the related view: {response}"
+                    
                     st.markdown(response)
                     
                     tool_response = {
@@ -152,9 +184,6 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                         "name": function_name
                     }
                     st.session_state.messages.append(tool_response)
-                    
-                    if is_url(response):
-                        st.session_state.tool_counter = 0
                     
             elif function_name == "sql_generator":
                 print()
@@ -221,6 +250,7 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                             xml_creator = SQLtoXML(st.session_state.client)
                             xml_creator.convert_sql_to_xml()
                             st.markdown("XML Successfully Generated")
+                            print("XML Successfully Generated")
                             st.session_state.messages.append({"role":"assistant", "content": "XML Successfully Generated"})
                                                         
                             st.session_state.generating_xml = False
@@ -239,7 +269,10 @@ if st.session_state.messages[-1]["role"] not in ["assistant","tool"]:
                         # "role": "assistant",
                         # "content": response
                     # }
-
+        else:
+            st.session_state.tool_counter = 0
+            st.markdown(st.session_state.tool_check.message.content)
+            st.session_state.messages.append({"role":"assistant", "content":st.session_state.tool_check.message.content})
     # st.session_state.messages.extend(return_messages)
 
 
