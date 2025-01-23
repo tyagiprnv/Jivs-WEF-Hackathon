@@ -1,0 +1,219 @@
+---
+
+### SAP Table Descriptions and Fields
+
+---
+
+#### **LFA1 - Vendor Master (General Section)**
+- **Description**: Contains general data about vendors.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `NAME1`: Vendor name 1.
+  - `ORT01`: City.
+  - `LAND1`: Country key.
+  - `SPRAS`: Language key.
+  - `ERDAT`: Date on which the record was created.
+  - `ERNAM`: Name of the person who created the record.
+
+---
+
+#### **KNVK - Vendor Contact Persons**
+- **Description**: Contains contact person data for vendors.
+- **Common Fields**:
+  - `PARNR`: Contact person number.
+  - `NAME1`: Name of the contact person.
+  - `LIFNR`: Vendor account number.
+  - `ABTNR`: Department number.
+  - `TELF1`: Telephone number.
+
+---
+
+#### **LFAS - Vendor Master (Purchasing Organization Data)**
+- **Description**: Vendor purchasing organization data.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `EKORG`: Purchasing organization.
+  - `SPERR`: Purchasing block for the vendor.
+
+---
+
+#### **LFB5 - Vendor Master (Dunning Data)**
+- **Description**: Contains dunning data for vendors.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `BUKRS`: Company code.
+  - `MANSG`: Dunning clerk.
+
+---
+
+#### **LFBK - Vendor Master (Bank Details)**
+- **Description**: Contains bank details for vendors.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `BANKS`: Bank country key.
+  - `BANKL`: Bank key.
+  - `BANKN`: Bank account number.
+
+---
+
+#### **LFM1 - Vendor Master (Purchasing Data)**
+- **Description**: Vendor purchasing data.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `EKORG`: Purchasing organization.
+  - `WAERS`: Currency key.
+
+---
+
+#### **CDHDR - Change Document Header**
+- **Description**: Header data for change documents.
+- **Common Fields**:
+  - `OBJECTCLAS`: Object class.
+  - `OBJECTID`: Object value.
+  - `CHANGENR`: Change number.
+  - `USERNAME`: User name.
+  - `UDATE`: Change date.
+
+---
+
+#### **LFBW - Vendor Master (Withholding Tax Data)**
+- **Description**: Contains withholding tax data for vendors.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `BUKRS`: Company code.
+  - `WITHCD`: Withholding tax code.
+
+---
+
+#### **BSIK - Accounting: Secondary Index for Vendors (Cleared Items)**
+- **Description**: Secondary index for cleared vendor line items.
+- **Common Fields**:
+  - `BUKRS`: Company code.
+  - `LIFNR`: Vendor account number.
+  - `BELNR`: Accounting document number.
+  - `GJAHR`: Fiscal year.
+
+---
+
+#### **BSAK - Accounting: Secondary Index for Vendors (Cleared Items)**
+- **Description**: Secondary index for cleared vendor line items.
+- **Common Fields**:
+  - `BUKRS`: Company code.
+  - `LIFNR`: Vendor account number.
+  - `BELNR`: Accounting document number.
+  - `GJAHR`: Fiscal year.
+
+---
+
+#### **LFB1 - Vendor Master (Company Code Data)**
+- **Description**: Vendor company code data.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `BUKRS`: Company code.
+  - `ZTERM`: Terms of payment key.
+  - `ZUAWA`: Alternative payee.
+
+---
+
+#### **ADR6 - Email Addresses (Business Address Services)**
+- **Description**: Contains email addresses.
+- **Common Fields**:
+  - `ADDRNUMBER`: Address number.
+  - `PERSNUMBER`: Person number.
+  - `SMTP_ADDR`: Email address.
+
+---
+
+#### **BNKA - Bank Master Data**
+- **Description**: Contains bank master data.
+- **Common Fields**:
+  - `BANKS`: Bank country key.
+  - `BANKL`: Bank key.
+  - `BANKA`: Bank name.
+
+---
+
+#### **LFM2 - Vendor Master (Subcontracting Data)**
+- **Description**: Vendor subcontracting data.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `EKORG`: Purchasing organization.
+  - `WERKS`: Plant.
+
+---
+
+#### **CDPOS - Change Document Items**
+- **Description**: Item data for change documents.
+- **Common Fields**:
+  - `OBJECTCLAS`: Object class.
+  - `OBJECTID`: Object value.
+  - `CHANGENR`: Change number.
+  - `TABNAME`: Table name.
+  - `FNAME`: Field name.
+
+---
+
+#### **BKPF - Accounting Document Header**
+- **Description**: Header data for accounting documents.
+- **Common Fields**:
+  - `BUKRS`: Company code.
+  - `BELNR`: Accounting document number.
+  - `GJAHR`: Fiscal year.
+  - `BLART`: Document type.
+
+---
+
+#### **TIBAN - IBAN Information**
+- **Description**: Contains IBAN information.
+- **Common Fields**:
+  - `BANKS`: Bank country key.
+  - `BANKL`: Bank key.
+  - `BANKN`: Bank account number.
+  - `IBAN`: IBAN number.
+
+---
+
+#### **LFC1 - Vendor Master (Transaction Figures)**
+- **Description**: Vendor transaction figures.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `BUKRS`: Company code.
+  - `GJAHR`: Fiscal year.
+
+---
+
+#### **BSEG - Accounting Document Segment**
+- **Description**: Segment data for accounting documents.
+- **Common Fields**:
+  - `BUKRS`: Company code.
+  - `BELNR`: Accounting document number.
+  - `GJAHR`: Fiscal year.
+  - `BUZEI`: Line item number.
+
+---
+
+#### **LFC3 - Vendor Master (Special G/L Transactions)**
+- **Description**: Vendor special G/L transactions.
+- **Common Fields**:
+  - `LIFNR`: Vendor account number.
+  - `BUKRS`: Company code.
+  - `UMSKS`: Special G/L indicator.
+
+---
+
+#### **T001 - Company Codes**
+- **Description**: Contains company code data.
+- **Common Fields**:
+  - `BUKRS`: Company code.
+  - `BUTXT`: Company code name.
+  - `ORT01`: City.
+
+---
+
+#### **T014 - Terms of Payment**
+- **Description**: Contains terms of payment data.
+- **Common Fields**:
+  - `ZTERM`: Terms of payment key.
+  - `TEXT1`: Description.
+
+---
