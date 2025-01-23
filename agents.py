@@ -89,6 +89,19 @@ class TaskDetectingAgent:
             messages=self.task_detector_convo,
             tools = self.tools
         )
+        if response.choices[0].finish_reason == "tool_calls":
+            assistant_response = {
+                "role":"assistant",
+                "content":f"Calling Function",
+                "tool_calls": [{"id":response.choices[0].message.tool_calls[0].id,
+                                "type":"function",
+                                "function":{"arguments":str(user_query),
+                                            "name":response.choices[0].message.tool_calls[0].function.name }}]
+                    }
+        else:
+            assistant_response =  {"role": "assistant", "content": response.choices[0].message.content}
+            
+        self.task_detector_convo.append(assistant_response)
         
         return response.choices[0]
     
@@ -179,7 +192,8 @@ class EasyNavAgent:
             if view_name:
                 url = self.generate_url(view_name)
                 print("Generated URL:", url)
-                response_content = f"Here's the link to the related view: {url}"
+                # response_content = f"Here's the link to the related view: {url}"
+                response_content = url
             else:
                 print("Could not extract a valid view name from the response.")
         else:
@@ -392,8 +406,8 @@ class SQLtoXML:
             if 'joins' not in parsed_dict.keys():
                 flag = False
                 continue
-            resp = get_joins(parsed_dict['joins']).replace("```","").replace("xml","")
-            if is_well_formed(resp):
+            resp = self.get_joins(parsed_dict['joins']).replace("```","").replace("xml","")
+            if self.is_well_formed(resp):
                 flag = False
                 components['staticJoinOption'] = resp
         
@@ -403,8 +417,8 @@ class SQLtoXML:
             if 'where' not in parsed_dict.keys():
                 flag = False
                 continue
-            resp = get_joins(parsed_dict['where']).replace("```","").replace("xml","")
-            if is_well_formed(resp):
+            resp = self.get_joins(parsed_dict['where']).replace("```","").replace("xml","")
+            if self.is_well_formed(resp):
                 flag = False
                 components['where'] = resp
         
@@ -414,8 +428,8 @@ class SQLtoXML:
             if 'order' not in parsed_dict.keys():
                 flag = False
                 continue
-            resp = get_joins(parsed_dict['order']).replace("```","").replace("xml","")
-            if is_well_formed(resp):
+            resp = self.get_joins(parsed_dict['order']).replace("```","").replace("xml","")
+            if self.is_well_formed(resp):
                 flag = False
                 components['order'] = resp
         
