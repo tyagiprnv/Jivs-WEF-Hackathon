@@ -382,8 +382,32 @@ class SQLXMLGenAgent:
 
 class SQLtoXML:
     
-    def __init__(self, client):
+    """
+    A SQLtoXML class that converts SQL queries into corresponding XML representations
+    based on predefined XML schemas. It leverages a language model (LLM) to generate
+    XML snippets for different SQL clauses and assembles them into a complete XML structure.
     
+    Attributes:
+        llm: The language model client used for generating XML snippets.
+        mapping_sql_xmlschema (dict): A mapping between SQL clauses and their corresponding XML schema components.
+        schema_dict (dict): The decoded XML schema definitions.
+        components_schema (dict): A dictionary storing individual XML schema components for different SQL clauses.
+    """
+    
+    def __init__(self, client):
+        """
+        Initializes the SQLtoXML instance with a language model client and loads the XML schema.
+
+        Args:
+            client: The language model client used to generate XML snippets.
+
+        Attributes:
+            llm: The provided language model client.
+            mapping_sql_xmlschema (dict): Maps SQL clauses to their respective XML schema components.
+            schema_dict (dict): Decoded XML schema loaded from the standard XSD file.
+            components_schema (dict): Stores individual XML schema components for easy access.
+        """
+        
         self.llm = client
         self.mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions', 'group': 'AggregateOptions'}
         self.schema_dict = XMLSchema.meta_schema.decode("config/standard.xsd")
@@ -392,6 +416,16 @@ class SQLtoXML:
             self.components_schema[sch['@name']] = self.schema_dict['xs:complexType'][i]
     
     def ask_gpt(self, msg):
+        """
+        Sends a message to the language model and retrieves the response.
+
+        Args:
+            msg (str): The message to send to the language model.
+
+        Returns:
+            str: The first part of the response content before a comma.
+        """
+        
         completion = self.llm.chat.completions.create(
             model="gpt-4o", 
             temperature = 0,
@@ -402,6 +436,16 @@ class SQLtoXML:
         return result[0]
         
     def get_sql(self, filepath):
+        """
+        Reads and returns the SQL query from the specified file.
+
+        Args:
+            filepath (str): The path to the SQL file.
+
+        Returns:
+            str: The content of the SQL file, or an error message if the file cannot be read.
+        """
+        
         try:
             with open(filepath, 'r', encoding='utf-8') as file:
                 return file.read()
@@ -411,6 +455,16 @@ class SQLtoXML:
             return f"An error occurred: {str(e)}"
     
     def is_well_formed(self, xml_text):
+        """
+        Checks if the provided XML text is well-formed.
+
+        Args:
+            xml_text (str): The XML content to validate.
+
+        Returns:
+            bool: True if the XML is well-formed, False otherwise.
+        """
+        
         try:
             ET.fromstring(xml_text)
             return True
@@ -419,6 +473,15 @@ class SQLtoXML:
             return False
     
     def get_selects(self, vals):
+        """
+        Generates XML entries for the SQL SELECT clause based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL SELECT clause to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the SELECT clause, or 'NA' if no values are provided.
+        """
         
         if vals is None:
             return 'NA'
@@ -433,11 +496,32 @@ class SQLtoXML:
         return resp
 
     def get_distincts(self, vals):
+        
+        """
+        Determines if the SQL query includes a DISTINCT clause.
+
+        Args:
+            vals (Optional[str]): The SQL clause to check for DISTINCT.
+
+        Returns:
+            bool: True if DISTINCT is present, False otherwise.
+        """
+        
         if vals is None:
             return False
         return True
 
     def get_TableObjects(self, vals):
+        """
+        Generates XML entries for the SQL FROM clause (table objects) based on the provided values.
+
+        Args:
+            vals (Optional[str]): The table names involved in the SQL query.
+
+        Returns:
+            str: The generated XML entries for the table objects, or False if no values are provided.
+        """
+        
         if vals is None:
             return False
         TableObjects_xsd = self.components_schema[self.mapping_sql_xmlschema['all_tables']]
@@ -450,6 +534,15 @@ class SQLtoXML:
         return resp
 
     def get_joins(self, vals):
+        """
+        Generates XML entries for the SQL JOIN clauses based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL JOIN clauses to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the JOIN clauses, or False if no values are provided.
+        """
         
         if vals is None:
             return False
@@ -465,6 +558,16 @@ class SQLtoXML:
         return resp
 
     def get_where(self, vals):
+        """
+        Generates XML entries for the SQL WHERE clause based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL WHERE clause to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the WHERE clause, or False if no values are provided.
+        """
+        
         if vals is None:
             return False
         where_xsd = self.components_schema[self.mapping_sql_xmlschema['where']]
@@ -478,6 +581,16 @@ class SQLtoXML:
         return resp
 
     def get_order(self, vals):
+        """
+        Generates XML entries for the SQL ORDER BY clause based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL ORDER BY clause to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the ORDER BY clause, or False if no values are provided.
+        """
+        
         if vals is None:
             return False
         order_xsd = self.components_schema[self.mapping_sql_xmlschema['order']]
@@ -491,6 +604,16 @@ class SQLtoXML:
         return resp
     
     def get_group(self, vals):
+        """
+        Generates XML entries for the SQL GROUP BY clause based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL GROUP BY clause to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the GROUP BY clause, or False if no values are provided.
+        """
+        
         if vals is None:
             return False
         group_xsd = self.components_schema[self.mapping_sql_xmlschema['group']]
@@ -504,6 +627,18 @@ class SQLtoXML:
         return resp
         
     def generate_child_xmls(self, sql):
+        """
+        Parses the SQL query and generates XML components for each SQL clause.
+
+        Args:
+            sql (str): The SQL query to convert into XML.
+
+        Returns:
+            Dict[str, str]: A dictionary containing XML components for various SQL clauses.
+                            Keys include 'select', 'distinct', 'all_tables', 'staticJoinOption',
+                            'where', 'order', and 'group'.
+        """
+        
         parsed = sqlglot.parse_one(sql)
         parsed_dict = parsed.args
         components = {}
@@ -575,11 +710,29 @@ class SQLtoXML:
         return components
     
     def get_view_details(self):
+        """
+        Retrieves view details from the configuration JSON file.
+
+        Returns:
+            tuple: A tuple containing the view name and its description.
+        """
+        
         with open("config/view.json", 'r') as json_file:
             data = json.load(json_file)
             return data['viewName'], data['viewDesc']
     
     def create_final_xml(self, sql, child_xml):
+        """
+        Assembles the final XML structure using the generated XML components and view details.
+
+        Args:
+            sql (str): The original SQL query.
+            child_xml (Dict[str, str]): A dictionary containing XML components for various SQL clauses.
+
+        Returns:
+            xml.etree.ElementTree.Element: The root element of the assembled XML structure.
+        """
+        
         ns = self.schema_dict['@xmlns:xs']
         ET.register_namespace("@xmlns:xs", ns)
         if 'join' not in sql.lower():
@@ -673,6 +826,15 @@ class SQLtoXML:
         return root
     
     def convert_sql_to_xml(self):
+        """
+        Converts the SQL query associated with a specific view into an XML file.
+
+        This method retrieves the SQL query from a file, generates the corresponding XML
+        components, assembles the final XML structure, and writes it to an XML file.
+
+        Returns:
+            str: The absolute path to the generated XML file.
+        """
         
         viewName, _ = self.get_view_details()
         sql = self.get_sql(f"config/{viewName}.sql")
