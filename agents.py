@@ -324,7 +324,7 @@ class SQLXMLGenAgent:
         self.llm = client
         with open(schema_file, 'r') as infile:
             schema = infile.read()
-        with open('desc.txt', 'r') as f:
+        with open('data/sap_metadata/desc.txt', 'r') as f:
             table_info = f.read()
             
         self.sql_gen_messages = [{
