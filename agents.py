@@ -319,8 +319,27 @@ class EasyNavAgent:
         return None
     
 class SQLXMLGenAgent:
+    """
+    SQLXMLGenAgent is responsible for generating XML representations of SQL queries.
+    It leverages a language model (LLM) to create valid SQL queries based on user requests.
+
+    Attributes:
+        llm: The language model client used for generating SQL queries.
+        sql_gen_messages (list): The conversation history used to interact with the language model.
+        schema_dict (dict): The decoded XML schema definitions.
+        table_info (dict): Stores table and column details.
+    """
     
     def __init__(self, client, schema_file = "data/schema.txt"):
+        """
+        Initializes the SQLXMLGenAgent with a language model client and loads the database schema
+        and table information from specified files.
+
+        Args:
+            client: The language model client used to generate SQL queries.
+            schema_file (str, optional): Path to the schema file. Defaults to "data/schema.txt".
+            
+        """
         self.llm = client
         with open(schema_file, 'r') as infile:
             schema = infile.read()
@@ -367,6 +386,20 @@ class SQLXMLGenAgent:
             }]
     
     def generate_response(self, prompt):
+        """
+        Generates a SQL query based on the user's prompt by interacting with the language model.
+
+        This method appends the user's prompt to the conversation history, sends it to the language model,
+        receives the response, updates the conversation history with the assistant's reply, and returns
+        the generated SQL query or a clarifying question.
+
+        Args:
+            prompt (str): The user's input request for which a SQL query needs to be generated.
+
+        Returns:
+            str: The generated SQL query starting with 'sql:', a clarifying question if more information is needed,
+                 or 'quit' if the user opts to cancel the request.
+        """
         
         self.sql_gen_messages.append({"role": "user", "content": prompt})
         
