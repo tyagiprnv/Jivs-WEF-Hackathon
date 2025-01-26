@@ -48,7 +48,7 @@ initialize_env_variables()
 
 st.set_page_config(
     initial_sidebar_state = "expanded",
-    page_title = "AppName",
+    page_title = "ZENIX - Zero-Effort Natural language to Integrated XML",
     layout = "wide"
 )
 

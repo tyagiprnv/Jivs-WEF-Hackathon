@@ -9,10 +9,27 @@ import ast
 import re
 import json
 
-#MAIN AGENT
 class TaskDetectingAgent:
     
+    """
+    This agent uses a LLM to classify user prompts into specific tasks related to database operations,
+    such as providing links to database views/tables or generating complex SQL queries and their XML Business objects.
+    
+    Attributes:
+        llm: The language model client used for generating responses.
+        task_detector_convo: The conversation history used to interact with the language model.
+        tools (list): A list of tool definitions (functions) that can be called based on the classified task.
+    """
+    
     def __init__(self, client, schema_file = "data/schema.txt"):
+        """
+        Initializes the TaskDetectingAgent with a language model client and a database schema.
+
+        Args:
+            client: The language model client used to generate responses.
+            schema_file (str, optional): Path to the schema file. Defaults to "data/schema.txt".
+        """
+        
         self.llm = client
         with open(schema_file, 'r') as infile:
             schema = infile.read()
@@ -81,6 +98,15 @@ class TaskDetectingAgent:
 ]
     
     def generate_response(self, user_query):
+        """
+        Generates a response to the user's query by classifying the task and invoking the appropriate function.
+
+        Args:
+            user_query (str): The user's input query that needs to be classified and addressed.
+
+        Returns:
+            dict: The response from the language model, which may include a function call or a direct message.
+        """
         
         self.task_detector_convo.append({"role": "user", "content": user_query})
         
@@ -107,12 +133,46 @@ class TaskDetectingAgent:
         return response.choices[0]
     
 class SemanticSearch:
+    
+    """
+    A SemanticSearch class that utilizes sentence embeddings to perform semantic
+    search over a collection of database views. It encodes user queries and retrieves
+    the most relevant views based on their semantic similarity.
+
+    Attributes:
+        model (SentenceTransformer): The sentence transformer model used for encoding queries.
+        client (chromadb.PersistentClient): The ChromaDB persistent client for database interactions.
+        collection (chromadb.Collection): The specific collection within ChromaDB to search.
+    """
+    
     def __init__(self, persist_dir: str = "chroma_db"):
+        """
+        Initializes the SemanticSearch instance with a sentence transformer model and connects
+        to a persistent ChromaDB collection.
+
+        Args:
+            persist_dir (str, optional): The directory path where the ChromaDB persistent
+                                         storage is located. Defaults to "chroma_db".
+        """
+        
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.client = chromadb.PersistentClient(path=persist_dir)
         self.collection = self.client.get_collection(name="views")
     
     def find_relevant_views(self, query: str, top_k: int = 2) -> List[Dict]:
+        """
+        Finds the most relevant database views based on the semantic similarity to the user's query.
+
+        This method encodes the user's query into an embedding, queries the ChromaDB collection
+        for the top_k most similar embeddings, and returns the corresponding view names and fields.
+
+        Args:
+            query (str): The user's input query for which relevant database views are to be found.
+            top_k (int, optional): The number of top relevant views to retrieve. Defaults to 2.
+
+        Returns:
+            List[Dict]: A list of dictionaries, each containing the 'view_name' and 'fields' of a relevant view.    
+        """
         query_embedding = self.model.encode([query]).tolist()
         results = self.collection.query(
             query_embeddings=query_embedding,
@@ -139,12 +199,28 @@ class SemanticSearch:
         return relevant_views
     
 class EasyNavAgent:
+    """
+    An EasyNavAgent assists users in navigating and finding the correct database views/tables
+    based on their queries. It leverages a SemanticSearch system to identify relevant views
+    and interacts with a language model to process user inputs and generate appropriate responses.
     
+    Attributes:
+        llm: The language model client used for generating responses.
+        search_system (SemanticSearch): An instance of SemanticSearch used to find relevant views.
+        navigation_conversation (list): The conversation history used to interact with the language model.
+    """
     def __init__(self, client, search_system: SemanticSearch):
+        """
+        Initializes the EasyNavAgent with a language model client and a semantic search system.
+        
+        Args:
+            client: The language model client used to generate responses.
+            search_system (SemanticSearch): An instance of SemanticSearch for finding relevant views.
+        """
         
         self.search_system = search_system
         self.llm = client
-        self.nagivation_conversation = [
+        self.navigation_conversation = [
             {"role": "system", 
              "content": """You are a SQL expert and a helpful assistant for the JIVS IMP system. 
              Your task is to help users find the correct view/table.
@@ -158,6 +234,21 @@ class EasyNavAgent:
                 - If the user hints at aborting or cancelling his request, strictly respond quit."""}]
     
     def generate_response(self, prompt: str) -> str:
+        """
+        Generates a response to the user's prompt by identifying the relevant view and providing its URL.
+        
+        This method uses the SemanticSearch system to find relevant views based on the user's query.
+        It then interacts with the language model to determine the most appropriate view. If the
+        language model is confident, it generates a URL for the selected view. Otherwise, it
+        prompts the user for more details.
+
+        Args:
+            prompt (str): The user's input query for which a relevant view/table needs to be found.
+
+        Returns:
+            str: The URL of the relevant view if confidently identified, or an informative message
+                 prompting the user to clarify their query.
+        """
         
         relevant_views = self.search_system.find_relevant_views(prompt)
         
@@ -179,11 +270,11 @@ class EasyNavAgent:
         
         # print(prompt)
         
-        self.nagivation_conversation.append({"role": "user", "content": prompt})
+        self.navigation_conversation.append({"role": "user", "content": prompt})
         
         response = self.llm.chat.completions.create(
             model="gpt-4o-mini",  
-            messages=self.nagivation_conversation
+            messages=self.navigation_conversation
         )
         response_content = response.choices[0].message.content
         # print(response_content)
@@ -201,11 +292,24 @@ class EasyNavAgent:
         else:
             print("The chatbot is unsure. Please provide more details or clarify your query.")
         
-        self.nagivation_conversation.append({"role": "assistant", "content": response_content})
+        self.navigation_conversation.append({"role": "assistant", "content": response_content})
         
         return response_content
     
     def generate_url(self, view_name: str) -> str:
+        """
+        Generates a URL for the specified view name.
+        
+        This method constructs a URL that directs the user to the search form for the given
+        view within the JIVS IMP system.
+
+        Args:
+            view_name (str): The name of the view/table for which to generate the URL.
+
+        Returns:
+            str: The generated URL pointing to the specified view.
+        """
+        
         return f"https://wef2025.cloud.jivs.com/jivs/getSearchForm.do?viewName={view_name}&packageName=sap.ecc60kjl"
 
     def extract_view_name(self, response: str) -> str:
@@ -215,12 +319,31 @@ class EasyNavAgent:
         return None
     
 class SQLXMLGenAgent:
+    """
+    SQLXMLGenAgent is responsible for generating XML representations of SQL queries.
+    It leverages a language model (LLM) to create valid SQL queries based on user requests.
+
+    Attributes:
+        llm: The language model client used for generating SQL queries.
+        sql_gen_messages (list): The conversation history used to interact with the language model.
+        schema_dict (dict): The decoded XML schema definitions.
+        table_info (dict): Stores table and column details.
+    """
     
     def __init__(self, client, schema_file = "data/schema.txt"):
+        """
+        Initializes the SQLXMLGenAgent with a language model client and loads the database schema
+        and table information from specified files.
+
+        Args:
+            client: The language model client used to generate SQL queries.
+            schema_file (str, optional): Path to the schema file. Defaults to "data/schema.txt".
+            
+        """
         self.llm = client
         with open(schema_file, 'r') as infile:
             schema = infile.read()
-        with open('desc.txt', 'r') as f:
+        with open('data/sap_metadata/desc.txt', 'r') as f:
             table_info = f.read()
             
         self.sql_gen_messages = [{
@@ -263,6 +386,20 @@ class SQLXMLGenAgent:
             }]
     
     def generate_response(self, prompt):
+        """
+        Generates a SQL query based on the user's prompt by interacting with the language model.
+
+        This method appends the user's prompt to the conversation history, sends it to the language model,
+        receives the response, updates the conversation history with the assistant's reply, and returns
+        the generated SQL query or a clarifying question.
+
+        Args:
+            prompt (str): The user's input request for which a SQL query needs to be generated.
+
+        Returns:
+            str: The generated SQL query starting with 'sql:', a clarifying question if more information is needed,
+                 or 'quit' if the user opts to cancel the request.
+        """
         
         self.sql_gen_messages.append({"role": "user", "content": prompt})
         
@@ -278,8 +415,32 @@ class SQLXMLGenAgent:
 
 class SQLtoXML:
     
-    def __init__(self, client):
+    """
+    A SQLtoXML class that converts SQL queries into corresponding XML representations
+    based on predefined XML schemas. It leverages a language model (LLM) to generate
+    XML snippets for different SQL clauses and assembles them into a complete XML structure.
     
+    Attributes:
+        llm: The language model client used for generating XML snippets.
+        mapping_sql_xmlschema (dict): A mapping between SQL clauses and their corresponding XML schema components.
+        schema_dict (dict): The decoded XML schema definitions.
+        components_schema (dict): A dictionary storing individual XML schema components for different SQL clauses.
+    """
+    
+    def __init__(self, client):
+        """
+        Initializes the SQLtoXML instance with a language model client and loads the XML schema.
+
+        Args:
+            client: The language model client used to generate XML snippets.
+
+        Attributes:
+            llm: The provided language model client.
+            mapping_sql_xmlschema (dict): Maps SQL clauses to their respective XML schema components.
+            schema_dict (dict): Decoded XML schema loaded from the standard XSD file.
+            components_schema (dict): Stores individual XML schema components for easy access.
+        """
+        
         self.llm = client
         self.mapping_sql_xmlschema = {'select': 'SqlFunctions', 'all_tables': 'TableObjects', 'all_joins': 'StaticJoinOptions', 'individual_joins': 'Joins', 'where': 'ValueFilters', 'order': 'SortOptions', 'group': 'AggregateOptions'}
         self.schema_dict = XMLSchema.meta_schema.decode("config/standard.xsd")
@@ -288,6 +449,16 @@ class SQLtoXML:
             self.components_schema[sch['@name']] = self.schema_dict['xs:complexType'][i]
     
     def ask_gpt(self, msg):
+        """
+        Sends a message to the language model and retrieves the response.
+
+        Args:
+            msg (str): The message to send to the language model.
+
+        Returns:
+            str: The first part of the response content before a comma.
+        """
+        
         completion = self.llm.chat.completions.create(
             model="gpt-4o", 
             temperature = 0,
@@ -298,6 +469,16 @@ class SQLtoXML:
         return result[0]
         
     def get_sql(self, filepath):
+        """
+        Reads and returns the SQL query from the specified file.
+
+        Args:
+            filepath (str): The path to the SQL file.
+
+        Returns:
+            str: The content of the SQL file, or an error message if the file cannot be read.
+        """
+        
         try:
             with open(filepath, 'r', encoding='utf-8') as file:
                 return file.read()
@@ -307,6 +488,16 @@ class SQLtoXML:
             return f"An error occurred: {str(e)}"
     
     def is_well_formed(self, xml_text):
+        """
+        Checks if the provided XML text is well-formed.
+
+        Args:
+            xml_text (str): The XML content to validate.
+
+        Returns:
+            bool: True if the XML is well-formed, False otherwise.
+        """
+        
         try:
             ET.fromstring(xml_text)
             return True
@@ -315,6 +506,15 @@ class SQLtoXML:
             return False
     
     def get_selects(self, vals):
+        """
+        Generates XML entries for the SQL SELECT clause based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL SELECT clause to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the SELECT clause, or 'NA' if no values are provided.
+        """
         
         if vals is None:
             return 'NA'
@@ -329,11 +529,32 @@ class SQLtoXML:
         return resp
 
     def get_distincts(self, vals):
+        
+        """
+        Determines if the SQL query includes a DISTINCT clause.
+
+        Args:
+            vals (Optional[str]): The SQL clause to check for DISTINCT.
+
+        Returns:
+            bool: True if DISTINCT is present, False otherwise.
+        """
+        
         if vals is None:
             return False
         return True
 
     def get_TableObjects(self, vals):
+        """
+        Generates XML entries for the SQL FROM clause (table objects) based on the provided values.
+
+        Args:
+            vals (Optional[str]): The table names involved in the SQL query.
+
+        Returns:
+            str: The generated XML entries for the table objects, or False if no values are provided.
+        """
+        
         if vals is None:
             return False
         TableObjects_xsd = self.components_schema[self.mapping_sql_xmlschema['all_tables']]
@@ -346,6 +567,15 @@ class SQLtoXML:
         return resp
 
     def get_joins(self, vals):
+        """
+        Generates XML entries for the SQL JOIN clauses based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL JOIN clauses to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the JOIN clauses, or False if no values are provided.
+        """
         
         if vals is None:
             return False
@@ -361,6 +591,16 @@ class SQLtoXML:
         return resp
 
     def get_where(self, vals):
+        """
+        Generates XML entries for the SQL WHERE clause based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL WHERE clause to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the WHERE clause, or False if no values are provided.
+        """
+        
         if vals is None:
             return False
         where_xsd = self.components_schema[self.mapping_sql_xmlschema['where']]
@@ -374,6 +614,16 @@ class SQLtoXML:
         return resp
 
     def get_order(self, vals):
+        """
+        Generates XML entries for the SQL ORDER BY clause based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL ORDER BY clause to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the ORDER BY clause, or False if no values are provided.
+        """
+        
         if vals is None:
             return False
         order_xsd = self.components_schema[self.mapping_sql_xmlschema['order']]
@@ -387,6 +637,16 @@ class SQLtoXML:
         return resp
     
     def get_group(self, vals):
+        """
+        Generates XML entries for the SQL GROUP BY clause based on the provided values.
+
+        Args:
+            vals (Optional[str]): The SQL GROUP BY clause to convert into XML.
+
+        Returns:
+            str: The generated XML entries for the GROUP BY clause, or False if no values are provided.
+        """
+        
         if vals is None:
             return False
         group_xsd = self.components_schema[self.mapping_sql_xmlschema['group']]
@@ -400,6 +660,18 @@ class SQLtoXML:
         return resp
         
     def generate_child_xmls(self, sql):
+        """
+        Parses the SQL query and generates XML components for each SQL clause.
+
+        Args:
+            sql (str): The SQL query to convert into XML.
+
+        Returns:
+            Dict[str, str]: A dictionary containing XML components for various SQL clauses.
+                            Keys include 'select', 'distinct', 'all_tables', 'staticJoinOption',
+                            'where', 'order', and 'group'.
+        """
+        
         parsed = sqlglot.parse_one(sql)
         parsed_dict = parsed.args
         components = {}
@@ -471,11 +743,29 @@ class SQLtoXML:
         return components
     
     def get_view_details(self):
+        """
+        Retrieves view details from the configuration JSON file.
+
+        Returns:
+            tuple: A tuple containing the view name and its description.
+        """
+        
         with open("config/view.json", 'r') as json_file:
             data = json.load(json_file)
             return data['viewName'], data['viewDesc']
     
     def create_final_xml(self, sql, child_xml):
+        """
+        Assembles the final XML structure using the generated XML components and view details.
+
+        Args:
+            sql (str): The original SQL query.
+            child_xml (Dict[str, str]): A dictionary containing XML components for various SQL clauses.
+
+        Returns:
+            xml.etree.ElementTree.Element: The root element of the assembled XML structure.
+        """
+        
         ns = self.schema_dict['@xmlns:xs']
         ET.register_namespace("@xmlns:xs", ns)
         if 'join' not in sql.lower():
@@ -569,6 +859,15 @@ class SQLtoXML:
         return root
     
     def convert_sql_to_xml(self):
+        """
+        Converts the SQL query associated with a specific view into an XML file.
+
+        This method retrieves the SQL query from a file, generates the corresponding XML
+        components, assembles the final XML structure, and writes it to an XML file.
+
+        Returns:
+            str: The absolute path to the generated XML file.
+        """
         
         viewName, _ = self.get_view_details()
         sql = self.get_sql(f"config/{viewName}.sql")
@@ -581,34 +880,3 @@ class SQLtoXML:
         tree.write(output_xml_file, encoding="utf-8", xml_declaration=True)
         current_wd = os.getcwd()
         return os.path.join(current_wd, output_xml_file)
-        
-        
-    
-    
-
-# def generate_sql(user_input, api_key):
-#     client = OpenAI(api_key= api_key)
-#     message = {"role": "user", "content": user_input}
-#     convo.append(message)
-#     response = client.chat.completions.create(
-#     model = "gpt-4o-mini",
-#     messages = convo,
-#     stream = False
-#     )
-#     convo.append(response.choices[0].message)
-#     return response.choices[0].message.content
-
-# def interact_with_user():
-#     user_input = input("Enter your request: ")
-#     while True:
-#         if user_input.lower() in ["exit", "quit"]:
-#             print("Chatbot: Goodbye!")
-#             break
-#         response = generate_sql(user_input)
-#         if is_sql_statement(response):
-#           print("Generated SQL Query:", response)
-#           break
-#         else:
-#           print("Generated SQL Query is invalid.")
-#           print("Clarifying Question:", response)
-#           user_input = input("Your response: ")
