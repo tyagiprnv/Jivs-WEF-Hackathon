@@ -9,10 +9,27 @@ import ast
 import re
 import json
 
-#MAIN AGENT
 class TaskDetectingAgent:
     
+    """
+    This agent uses a LLM to classify user prompts into specific tasks related to database operations,
+    such as providing links to database views/tables or generating complex SQL queries and their XML Business objects.
+    
+    Attributes:
+        llm: The language model client used for generating responses.
+        task_detector_convo: The conversation history used to interact with the language model.
+        tools (list): A list of tool definitions (functions) that can be called based on the classified task.
+    """
+    
     def __init__(self, client, schema_file = "data/schema.txt"):
+        """
+        Initializes the TaskDetectingAgent with a language model client and a database schema.
+
+        Args:
+            client: The language model client used to generate responses.
+            schema_file (str, optional): Path to the schema file. Defaults to "data/schema.txt".
+        """
+        
         self.llm = client
         with open(schema_file, 'r') as infile:
             schema = infile.read()
@@ -81,6 +98,15 @@ class TaskDetectingAgent:
 ]
     
     def generate_response(self, user_query):
+        """
+        Generates a response to the user's query by classifying the task and invoking the appropriate function.
+
+        Args:
+            user_query (str): The user's input query that needs to be classified and addressed.
+
+        Returns:
+            dict: The response from the language model, which may include a function call or a direct message.
+        """
         
         self.task_detector_convo.append({"role": "user", "content": user_query})
         
@@ -107,12 +133,46 @@ class TaskDetectingAgent:
         return response.choices[0]
     
 class SemanticSearch:
+    
+    """
+    A SemanticSearch class that utilizes sentence embeddings to perform semantic
+    search over a collection of database views. It encodes user queries and retrieves
+    the most relevant views based on their semantic similarity.
+
+    Attributes:
+        model (SentenceTransformer): The sentence transformer model used for encoding queries.
+        client (chromadb.PersistentClient): The ChromaDB persistent client for database interactions.
+        collection (chromadb.Collection): The specific collection within ChromaDB to search.
+    """
+    
     def __init__(self, persist_dir: str = "chroma_db"):
+        """
+        Initializes the SemanticSearch instance with a sentence transformer model and connects
+        to a persistent ChromaDB collection.
+
+        Args:
+            persist_dir (str, optional): The directory path where the ChromaDB persistent
+                                         storage is located. Defaults to "chroma_db".
+        """
+        
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.client = chromadb.PersistentClient(path=persist_dir)
         self.collection = self.client.get_collection(name="views")
     
     def find_relevant_views(self, query: str, top_k: int = 2) -> List[Dict]:
+        """
+        Finds the most relevant database views based on the semantic similarity to the user's query.
+
+        This method encodes the user's query into an embedding, queries the ChromaDB collection
+        for the top_k most similar embeddings, and returns the corresponding view names and fields.
+
+        Args:
+            query (str): The user's input query for which relevant database views are to be found.
+            top_k (int, optional): The number of top relevant views to retrieve. Defaults to 2.
+
+        Returns:
+            List[Dict]: A list of dictionaries, each containing the 'view_name' and 'fields' of a relevant view.    
+        """
         query_embedding = self.model.encode([query]).tolist()
         results = self.collection.query(
             query_embeddings=query_embedding,
@@ -139,12 +199,28 @@ class SemanticSearch:
         return relevant_views
     
 class EasyNavAgent:
+    """
+    An EasyNavAgent assists users in navigating and finding the correct database views/tables
+    based on their queries. It leverages a SemanticSearch system to identify relevant views
+    and interacts with a language model to process user inputs and generate appropriate responses.
     
+    Attributes:
+        llm: The language model client used for generating responses.
+        search_system (SemanticSearch): An instance of SemanticSearch used to find relevant views.
+        navigation_conversation (list): The conversation history used to interact with the language model.
+    """
     def __init__(self, client, search_system: SemanticSearch):
+        """
+        Initializes the EasyNavAgent with a language model client and a semantic search system.
+        
+        Args:
+            client: The language model client used to generate responses.
+            search_system (SemanticSearch): An instance of SemanticSearch for finding relevant views.
+        """
         
         self.search_system = search_system
         self.llm = client
-        self.nagivation_conversation = [
+        self.navigation_conversation = [
             {"role": "system", 
              "content": """You are a SQL expert and a helpful assistant for the JIVS IMP system. 
              Your task is to help users find the correct view/table.
@@ -158,6 +234,21 @@ class EasyNavAgent:
                 - If the user hints at aborting or cancelling his request, strictly respond quit."""}]
     
     def generate_response(self, prompt: str) -> str:
+        """
+        Generates a response to the user's prompt by identifying the relevant view and providing its URL.
+        
+        This method uses the SemanticSearch system to find relevant views based on the user's query.
+        It then interacts with the language model to determine the most appropriate view. If the
+        language model is confident, it generates a URL for the selected view. Otherwise, it
+        prompts the user for more details.
+
+        Args:
+            prompt (str): The user's input query for which a relevant view/table needs to be found.
+
+        Returns:
+            str: The URL of the relevant view if confidently identified, or an informative message
+                 prompting the user to clarify their query.
+        """
         
         relevant_views = self.search_system.find_relevant_views(prompt)
         
@@ -179,11 +270,11 @@ class EasyNavAgent:
         
         # print(prompt)
         
-        self.nagivation_conversation.append({"role": "user", "content": prompt})
+        self.navigation_conversation.append({"role": "user", "content": prompt})
         
         response = self.llm.chat.completions.create(
             model="gpt-4o-mini",  
-            messages=self.nagivation_conversation
+            messages=self.navigation_conversation
         )
         response_content = response.choices[0].message.content
         # print(response_content)
@@ -201,11 +292,24 @@ class EasyNavAgent:
         else:
             print("The chatbot is unsure. Please provide more details or clarify your query.")
         
-        self.nagivation_conversation.append({"role": "assistant", "content": response_content})
+        self.navigation_conversation.append({"role": "assistant", "content": response_content})
         
         return response_content
     
     def generate_url(self, view_name: str) -> str:
+        """
+        Generates a URL for the specified view name.
+        
+        This method constructs a URL that directs the user to the search form for the given
+        view within the JIVS IMP system.
+
+        Args:
+            view_name (str): The name of the view/table for which to generate the URL.
+
+        Returns:
+            str: The generated URL pointing to the specified view.
+        """
+        
         return f"https://wef2025.cloud.jivs.com/jivs/getSearchForm.do?viewName={view_name}&packageName=sap.ecc60kjl"
 
     def extract_view_name(self, response: str) -> str:
@@ -581,34 +685,3 @@ class SQLtoXML:
         tree.write(output_xml_file, encoding="utf-8", xml_declaration=True)
         current_wd = os.getcwd()
         return os.path.join(current_wd, output_xml_file)
-        
-        
-    
-    
-
-# def generate_sql(user_input, api_key):
-#     client = OpenAI(api_key= api_key)
-#     message = {"role": "user", "content": user_input}
-#     convo.append(message)
-#     response = client.chat.completions.create(
-#     model = "gpt-4o-mini",
-#     messages = convo,
-#     stream = False
-#     )
-#     convo.append(response.choices[0].message)
-#     return response.choices[0].message.content
-
-# def interact_with_user():
-#     user_input = input("Enter your request: ")
-#     while True:
-#         if user_input.lower() in ["exit", "quit"]:
-#             print("Chatbot: Goodbye!")
-#             break
-#         response = generate_sql(user_input)
-#         if is_sql_statement(response):
-#           print("Generated SQL Query:", response)
-#           break
-#         else:
-#           print("Generated SQL Query is invalid.")
-#           print("Clarifying Question:", response)
-#           user_input = input("Your response: ")
