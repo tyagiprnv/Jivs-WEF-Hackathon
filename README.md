@@ -10,7 +10,7 @@ This solution solves the problem with the help of chatbot - ZENIX (Zero Effort N
 ## Implementation Architecture:
 
 <p align="center">
-  <img src="Images/Architecture.png" width="800" />
+  <img src="images/Architecture.png" width="800" />
 </p>
 <p align="center">
     <b>Schema Mapping Approach 1</b> 
