@@ -24,7 +24,7 @@ When a user queries the chatbot or ZENIX the query is classified as TASK1 (helpi
   If the user queries the chatbot on SQL query the query is classified as Task 2. The SQL Agent takes over the task and helps in creating the SQL query. The job of the SQL agent is not done until a syntatically valid SQL is created. Once a valid SQL is created the task is handed over to the XML Generateion Agent. The XML Generation Agent creates the XML or the business object and saves in the created file.
 
 ## Application
-[![Watch the video](images/Architecture.png)](https://youtu.be/9eDWs87Rnok)
+[![Watch the video](images/app.png)](https://youtu.be/9eDWs87Rnok)
 
 
 
@@ -35,7 +35,6 @@ When a user queries the chatbot or ZENIX the query is classified as TASK1 (helpi
 - Use the below command to install the required packages
 ```
 pip install -r requirements.txt
-pip install python-dotenv
 ```
 - Setup chromadb
 - To run the streamlit application code use the below command
