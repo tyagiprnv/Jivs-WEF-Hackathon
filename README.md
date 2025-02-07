@@ -47,3 +47,8 @@ streamlit run app.py
 1. `app.py` is the python file used to having the streamlit code to run the chatbot
 2. `utils.py` file has some supporting functions for the task.
 3. `agents.py` file mentions the functionality of each agent
+4. `data_task_1` folder contains the documents used for the RAG
+5. `images` folder contains the images and assets
+6. `data folder` is the location where the newly created xml gets saved
+7. `config folder` contains the xsd file for defining the schema of xml
+8. `chroma_db` is the dummy vector database
