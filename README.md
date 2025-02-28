@@ -13,7 +13,7 @@ This solution solves the problem with the help of chatbot - ZENIX (Zero Effort N
   <img src="images/Architecture.png" width="800" />
 </p>
 <p align="center">
-    <b>Schema Mapping Approach 1</b> 
+    <b>Application Architecture</b> 
 </p>
 
 When a user queries the chatbot or ZENIX the query is classified as TASK1 (helping in navigating the JIVS IMP) or TASK2 (helping in creating the business objects) by the Task classification agent. 
